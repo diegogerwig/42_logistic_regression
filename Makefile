@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/13 10:30:10 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/13 11:53:17 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,11 +61,12 @@ train:
 	fi
 
 clean:
-
+	
 fclean: clean
 	@echo "\n🟡 Cleaning up...\n"
 	@rm -rf **/__pycache__
 	@rm -rf **/*_clean.csv
+	@cp -r ./plots ./plots_example
 	@rm -rf ./plots
 
 re:	fclean all

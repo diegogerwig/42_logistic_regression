@@ -1,6 +1,10 @@
 import sys
 import os
+import argparse
+
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def train(filename):
@@ -10,6 +14,7 @@ def train(filename):
     try:
         # Read the CSV file into a DataFrame
         df = pd.read_csv(filename)
+        df = df.dropna()
         df.info()
         input('\nPress Enter to continue...\n')
 
@@ -25,10 +30,6 @@ def train(filename):
     except Exception as e:
         print('❌ Error:', e)
         exit(1)
-
-
-
-
 
 
 def main():
