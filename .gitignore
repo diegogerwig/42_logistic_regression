@@ -159,8 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-
-# Ignore all .DS_Store files
+# Others
 *.dSYM
 *.o
 *.a
