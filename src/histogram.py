@@ -3,7 +3,6 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
 

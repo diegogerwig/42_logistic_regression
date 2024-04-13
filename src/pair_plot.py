@@ -54,12 +54,13 @@ def pair_plot(filename):
     df_num = df.select_dtypes(include=['number'])
     corr_matrix = df_num.corr()
     plt.figure(figsize=(15, 12))
-    plt.imshow(corr_matrix, cmap='coolwarm', interpolation='nearest', vmin=-1, vmax=1)
+    plt.imshow(corr_matrix, cmap='coolwarm', interpolation='nearest')
     plt.colorbar()
     plt.title('Correlation Matrix')
     for i in range(len(corr_matrix)):
         for j in range(len(corr_matrix)):
-            plt.text(j, i, "{:.4f}".format(corr_matrix.iloc[i, j]), ha='center', va='center', color='black')
+            plt.text(j, i, "{:.4f}".format(corr_matrix.iloc[i, j]),
+                     ha='center', va='center', color='black')
     plt.xticks(range(len(corr_matrix)), corr_matrix.columns, rotation=90)
     plt.yticks(range(len(corr_matrix)), corr_matrix.columns)
     plt.tight_layout()
