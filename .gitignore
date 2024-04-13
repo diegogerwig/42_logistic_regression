@@ -166,3 +166,7 @@ cython_debug/
 *.sw*
 .DS_Store
 .vscode
+
+test/
+utils/
+logreg/
