@@ -20,6 +20,7 @@ def pair_plot(filename):
     # Read data
     try:
         df = pd.read_csv(filename)
+        df = df.dropna()
     except FileNotFoundError:
         print('❌ Error: File not found.')
         exit(1)

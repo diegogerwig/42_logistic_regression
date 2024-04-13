@@ -89,14 +89,13 @@ def describe(filename):
     # Analyze numeric features of the DataFrame
     stats = [data_stats(df[col]) for col in df if
              pd.api.types.is_numeric_dtype(df[col])]
-    # Display statistics
+
     display(stats)
 
     # Ask user if they want to replace null values with median
     # Prompt the user for input
     print('❗️ Do you want to replace null values with median? (yes/no): ')
 
-    # Get user input and convert it to lowercase
     response = input().lower()
 
     if response == 'yes':
