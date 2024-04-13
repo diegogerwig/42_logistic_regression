@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.colors import LinearSegmentedColormap
 
 
 PLOTS_DIR = './plots'
@@ -44,16 +45,35 @@ def pair_plot(filename):
     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
                  plot_kws={"s": 4}, height=0.95, aspect=1.5)
 
-    # Show plot
     plt.show(block=False)
 
-    # Save plot
     os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
     plt.savefig(save_path)
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
     plt.close()
+
+    df_num = df.select_dtypes(include=['number'])
+    corr_matrix = df_num.corr()
+    colors = [(0, 'green'), (0.5, 'orange'), (1, 'green')]
+    cmap = LinearSegmentedColormap.from_list('Custom', colors)  
+    plt.figure(figsize=(15, 12))
+    plt.imshow(corr_matrix, cmap=cmap, interpolation='nearest', vmin=-1, vmax=1)
+    plt.colorbar()
+    plt.title('Correlation Matrix')
+    for i in range(len(corr_matrix)):
+        for j in range(len(corr_matrix)):
+            plt.text(j, i, "{:.4f}".format(corr_matrix.iloc[i, j]), ha='center', va='center', color='black')
+    plt.xticks(range(len(corr_matrix)), corr_matrix.columns, rotation=90)
+    plt.yticks(range(len(corr_matrix)), corr_matrix.columns)
+    plt.tight_layout()
+    plt.show(block=False)
+
+    save_path = os.path.join(PLOTS_DIR, 'correlation_matrix.png')
+    plt.savefig(save_path, dpi=300)
+    print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+    input('\nPress Enter to continue...\n')
 
 
 def main():
