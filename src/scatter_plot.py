@@ -3,8 +3,8 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
 PLOTS_DIR = './plots'
+os.makedirs(PLOTS_DIR, exist_ok=True)
 
 categories = ['Arithmancy', 'Astronomy', 'Herbology',
               'Defense Against the Dark Arts', 'Divination', 'Muggle Studies',
@@ -97,7 +97,6 @@ def scatter_plot(filename):
     plt.show(block=False)
 
     # Save plot
-    os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'scatter_plot.png')
     plt.savefig(save_path)
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
