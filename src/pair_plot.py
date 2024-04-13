@@ -3,10 +3,14 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib.colors import LinearSegmentedColormap
+# from matplotlib.colors import LinearSegmentedColormap
+from tqdm import tqdm
+# import time
 
 
 PLOTS_DIR = './plots'
+os.makedirs(PLOTS_DIR, exist_ok=True)
+
 
 categories = ['Hogwarts House', 'Arithmancy', 'Astronomy', 'Herbology',
               'Defense Against the Dark Arts', 'Divination', 'Muggle Studies',
@@ -41,25 +45,54 @@ def pair_plot(filename):
     # Set the font size of axis labels
     sns.set_context("paper", font_scale=0.6)
 
-    # Draw pairplot
-    sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
-                 plot_kws={"s": 4}, height=0.95, aspect=1.5)
+    # # Draw pairplot
+    # column_combinations = [(col1, col2) for col1 in df.columns for col2 in df.columns if col1 != col2]
 
-    plt.show(block=False)
+    # # Calcular total de combinaciones para la barra de progreso
+    # total_combinations = len(column_combinations)
 
-    os.makedirs(PLOTS_DIR, exist_ok=True)
-    save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
-    plt.savefig(save_path)
-    print('\n⚪️ Plot saved as: {}\n'.format(save_path))
-    input('\nPress Enter to continue...\n')
-    plt.close()
+    # # Inicializar la barra de progreso
+    # pbar = tqdm(total=total_combinations, desc="Generating P Plot")
+
+    # # Generar pair plot para cada combinación de columnas
+    # for combination in column_combinations:
+    #     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist', plot_kws={"s": 4},
+    #                  height=0.95, aspect=1.5, x_vars=[combination[0]], y_vars=[combination[1]])
+    #     plt.close('all')
+    #     pbar.update(1)  
+    #     time.sleep(0.001)  
+
+    # pbar.close()  
+
+    with tqdm(total=1, desc="Generando Pair Plot") as pbar:
+        sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
+                     plot_kws={"s": 4}, height=0.95, aspect=1.5)
+        pbar.update(1)
+        plt.show(block=False)
+        save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
+        plt.savefig(save_path)
+        print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+        input('\nPress Enter to continue...\n')
+        plt.close()
+
+
+    # sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
+    #              plot_kws={"s": 4}, height=0.95, aspect=1.5)
+
+    # plt.show(block=False)
+
+    # save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
+    # plt.savefig(save_path)
+    # print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+    # input('\nPress Enter to continue...\n')
+    # plt.close()
 
     df_num = df.select_dtypes(include=['number'])
     corr_matrix = df_num.corr()
-    colors = [(0, 'green'), (0.5, 'orange'), (1, 'green')]
-    cmap = LinearSegmentedColormap.from_list('Custom', colors)  
+    # colors = [(0, 'lightblue'), (0.5, 'white'), (1, 'lightgreen')]
+    # cmap = LinearSegmentedColormap.from_list('Custom', colors)  
     plt.figure(figsize=(15, 12))
-    plt.imshow(corr_matrix, cmap=cmap, interpolation='nearest', vmin=-1, vmax=1)
+    plt.imshow(corr_matrix, cmap='coolwarm', interpolation='nearest', vmin=-1, vmax=1)
     plt.colorbar()
     plt.title('Correlation Matrix')
     for i in range(len(corr_matrix)):
@@ -74,6 +107,8 @@ def pair_plot(filename):
     plt.savefig(save_path, dpi=300)
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
+    plt.close()
+
 
 
 def main():
