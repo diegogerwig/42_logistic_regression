@@ -45,35 +45,37 @@ def pair_plot(filename):
     # Set the font size of axis labels
     sns.set_context("paper", font_scale=0.6)
 
-    # # Draw pairplot
-    # column_combinations = [(col1, col2) for col1 in df.columns for col2 in df.columns if col1 != col2]
+    column_combinations = [(col1, col2) for col1 in df.columns for col2 in df.columns if col1 != col2]
 
-    # # Calcular total de combinaciones para la barra de progreso
-    # total_combinations = len(column_combinations)
+    # Variable para almacenar los nombres de los archivos de las imágenes
+    image_paths = []
 
-    # # Inicializar la barra de progreso
-    # pbar = tqdm(total=total_combinations, desc="Generating P Plot")
+    with tqdm(total=len(column_combinations), desc="Generando Pair Plot") as pbar:
+        for i, combination in enumerate(column_combinations):
+            # Generar pair plot para cada combinación de columnas y guardar como imagen PNG
+            pair_plot = sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
+                                     plot_kws={"s": 4}, height=0.95, aspect=1.5, x_vars=[combination[0]], y_vars=[combination[1]])
+            save_path = os.path.join(PLOTS_DIR, f'pair_plot_{i}.png')
+            pair_plot.savefig(save_path)
+            plt.close(pair_plot.fig)  # Cerrar el pair plot para liberar memoria
+            image_paths.append(save_path)
+            pbar.update(1)
 
-    # # Generar pair plot para cada combinación de columnas
-    # for combination in column_combinations:
-    #     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist', plot_kws={"s": 4},
-    #                  height=0.95, aspect=1.5, x_vars=[combination[0]], y_vars=[combination[1]])
-    #     plt.close('all')
-    #     pbar.update(1)  
-    #     time.sleep(0.001)  
-
-    # pbar.close()  
-
-    with tqdm(total=1, desc="Generando Pair Plot") as pbar:
-        sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
-                     plot_kws={"s": 4}, height=0.95, aspect=1.5)
-        pbar.update(1)
-        plt.show(block=False)
-        save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
-        plt.savefig(save_path)
-        print('\n⚪️ Plot saved as: {}\n'.format(save_path))
-        input('\nPress Enter to continue...\n')
-        plt.close()
+    # Mostrar todos los pair plots juntos al final
+    fig, axes = plt.subplots(len(column_combinations), len(column_combinations), figsize=(15, 15))
+    for i, image_path in enumerate(image_paths):
+        row = i // len(column_combinations)
+        col = i % len(column_combinations)
+        axes[row, col].imshow(plt.imread(image_path))
+        axes[row, col].axis('off')
+    plt.tight_layout()
+    plt.show()
+    
+    save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
+    plt.savefig(save_path)
+    print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+    input('\nPress Enter to continue...\n')
+    plt.close()
 
 
     # sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
@@ -108,7 +110,6 @@ def pair_plot(filename):
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
     plt.close()
-
 
 
 def main():
