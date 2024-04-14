@@ -40,7 +40,8 @@ def histogram(filename):
         exit(1)
 
     # Calculate the number of categories with data
-    num_categories_with_data = sum(df[col].notnull().any() for col in categories)
+    num_categories_with_data = \
+        sum(df[col].notnull().any() for col in categories)
 
     # Calculate the number of rows and columns for subplots
     num_cols = min(num_categories_with_data, 7)
@@ -50,17 +51,19 @@ def histogram(filename):
     fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(20, 12))
 
     # Adjust spacing between subplots
-    plt.subplots_adjust(left=0.05, right=0.98, top=0.93, bottom=0.05, hspace=0.8, wspace=0.3)
+    plt.subplots_adjust(left=0.05, right=0.98, top=0.93,
+                        bottom=0.05, hspace=0.8, wspace=0.3)
 
     # Draw histogram and KDE for each category
     for ax, class_ in zip(axes.flatten(), categories):
         if class_ in df.columns and not df[class_].isnull().all():
             ax.set_title(class_, fontsize=10)
-            
+
             # Draw histogram and KDE for each house
             for house, color in zip(houses, colors):
                 sns.histplot(df.loc[df['Hogwarts House'] == house, class_],
-                            color=color, alpha=0.5, bins=20, label=house, ax=ax, kde=True)
+                             color=color, alpha=0.5, bins=20, label=house,
+                             ax=ax, kde=True)
 
     # Get legend for the first subplot
     handles, labels = axes[0, 0].get_legend_handles_labels()
