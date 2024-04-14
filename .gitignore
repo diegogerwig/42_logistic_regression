@@ -168,5 +168,5 @@ cython_debug/
 .vscode
 
 test/
-utils/
 logreg/
+utils/
