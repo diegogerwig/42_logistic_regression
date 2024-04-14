@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/13 19:33:40 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/14 20:08:07 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,7 +76,8 @@ fclean: clean
 	@rm -rf ./data/*_clean.csv
 	@rm -rf ./data/params.csv
 	@rm -rf ./data/houses.csv
-	@if [ ! -d "./plots_examples" ]; then \
+	@rm -rf ./data/df_num.csv
+		@if [ ! -d "./plots_examples" ]; then \
 		mkdir -p ./plots_examples; \
 	fi
 	@if [ -d "./plots" ]; then \
