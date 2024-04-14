@@ -41,7 +41,9 @@ def pair_plot(filename):
     sns.set_context("paper", font_scale=0.6)
 
     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
-                 plot_kws={"s": 4}, height=0.95, aspect=1.5)
+                 plot_kws={"s": 4},
+                 diag_kws={'alpha': 0.5, 'bins': 20, 'kde': True},
+                 height=0.95, aspect=1.5)
 
     plt.show(block=False)
 
