@@ -2,6 +2,7 @@ import sys
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -39,47 +40,33 @@ def histogram(filename):
         exit(1)
 
     # Calculate the number of categories with data
-    num_categories_with_data =\
-        sum(df[col].notnull().any() for col in categories)
+    num_categories_with_data = sum(df[col].notnull().any() for col in categories)
 
     # Calculate the number of rows and columns for subplots
-    num_rows = (num_categories_with_data - 1) // 7 + 1
     num_cols = min(num_categories_with_data, 7)
+    num_rows = (num_categories_with_data - 1) // num_cols + 1
 
     # Create plot grid
     fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(20, 12))
 
     # Adjust spacing between subplots
-    plt.subplots_adjust(left=0.05, right=0.98, top=0.93, bottom=0.05,
-                        hspace=0.8, wspace=0.3)
+    plt.subplots_adjust(left=0.05, right=0.98, top=0.93, bottom=0.05, hspace=0.8, wspace=0.3)
 
-    # Draw histogram for each category
-    subplot_index = 0
-    for i, class_ in enumerate(categories):
+    # Draw histogram and KDE for each category
+    for ax, class_ in zip(axes.flatten(), categories):
         if class_ in df.columns and not df[class_].isnull().all():
-            row = subplot_index // num_cols
-            col = subplot_index % num_cols
-            ax = axes[row, col]
-
-            # Set title
             ax.set_title(class_, fontsize=10)
-            # Draw histogram for each house
+            
+            # Draw histogram and KDE for each house
             for house, color in zip(houses, colors):
-                ax.hist(df.loc[df['Hogwarts House'] == house, class_],
-                        color=color, alpha=0.5, bins=20, label=house)
-
-            subplot_index += 1
+                sns.histplot(df.loc[df['Hogwarts House'] == house, class_],
+                            color=color, alpha=0.5, bins=20, label=house, ax=ax, kde=True)
 
     # Get legend for the first subplot
-    first_ax = axes[0, 0]
-    handles, labels = first_ax.get_legend_handles_labels()
-    legends = []
-    legends.append((handles, labels))
+    handles, labels = axes[0, 0].get_legend_handles_labels()
 
     # Create a separate subplot for legend
     ax_legend = plt.subplot(111)
-
-    # Hide the subplot
     ax_legend.axis('off')
 
     # Add legend outside the plot
@@ -92,7 +79,7 @@ def histogram(filename):
     plt.show(block=False)
 
     # Save plot
-    save_path = os.path.join(PLOTS_DIR, 'histogram.png')
+    save_path = os.path.join(PLOTS_DIR, 'histogram_with_kde.png')
     plt.savefig(save_path)
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
