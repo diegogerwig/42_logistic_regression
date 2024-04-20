@@ -170,7 +170,7 @@ def train(filename):
 
     model.plot_loss_history('All Houses')
 
-    # Saving hyperparameters adjusted with the training
+    # Save the parameters to a CSV file
     try:
         with open(PARAMS_FILE_PATH, 'w') as file:
             writer = csv.writer(file)
@@ -209,7 +209,6 @@ def main():
         print('❌ Error: File not found')
         exit(1)
 
-    # Describe the CSV file
     train(file_path)
 
 

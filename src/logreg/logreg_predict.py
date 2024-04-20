@@ -4,7 +4,6 @@ import csv
 
 import numpy as np
 import pandas as pd
-# import matplotlib.pyplot as plt
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
@@ -14,8 +13,6 @@ from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, MyLogisticRe
 from data_analyzer import percentile
 
 HOUSES_FILE_PATH = 'data/houses.csv'
-
-
 
 
 def predict(filename):
@@ -33,8 +30,6 @@ def predict(filename):
                 thetas.append(np.array([float(theta) for theta in row['theta'].split(',')]).reshape(-1, 1))
                 means.append(np.array([float(mean) for mean in row['mean'].split(',')]).reshape(-1, 1))
                 stds.append(np.array([float(std) for std in row['std'].split(',')]).reshape(-1, 1))
-
-
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
               file=sys.stderr)
@@ -47,12 +42,9 @@ def predict(filename):
         print('❌ Error:', e, file=sys.stderr)
         exit(1)
 
-    # 2. create 4 models with the proper thetas, one per class to classify
     models = []
     for i in range(4):
         models.append(MyLogisticRegression(thetas[i]))
-
-
 
     try:
         # Read the CSV file into a DataFrame
@@ -60,7 +52,6 @@ def predict(filename):
         df.info()
         print('\nINIT CSV FILE')
         input('\nPress Enter to continue...\n')
-
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
@@ -73,7 +64,6 @@ def predict(filename):
     except Exception as e:
         print('❌ Error:', e)
         exit(1)
-
 
     col_names = ["Index", "Hogwarts House", "First Name", "Last Name",
                  "Birthday", "Best Hand", "Arithmancy", "Astronomy",
@@ -95,14 +85,10 @@ def predict(filename):
             print(f"Wrong column type in '{filename} file", file=sys.stderr)
             exit(1)
 
- 
     df_num = df.select_dtypes(include=['int', 'float'])
-
- 
 
     # Replace NaN data with mean value
     for column in df_num.columns:
-        # if df_num[column].dtype != 'object':
         median = percentile(df_num[column], 0.50)
         df_num[column] = df_num[column].fillna(median)
 
@@ -123,21 +109,26 @@ def predict(filename):
     X = np.array(df_num).reshape(-1, nb_features)
     X_norm, _, _ = normalize_xset(X)
 
-    predict = np.empty((X.shape[0], 0))
+    predictions = np.zeros((X.shape[0], len(houses)))
     for model in models:
-        predict = np.c_[predict, model.predict(X_norm)]
-    predict = np.argmax(predict, axis=1).reshape((-1, 1))
+        predictions += model.predict(X_norm)
 
+    # Find the most probable house for each student
+    final_predictions = np.argmax(predictions, axis=1)
+
+    # predict = np.empty((X.shape[0], 0))
+    # for model in models:
+    #     predict = np.c_[predict, model.predict(X_norm)]
+    # predict = np.argmax(predict, axis=1).reshape((-1, 1))
+
+    # Save the predictions to a CSV file
     try:
         with open(HOUSES_FILE_PATH, 'w') as file:
             writer = csv.writer(file)
             writer.writerow(["Index", "Hogwarts House"])
-            for index, prediction in enumerate(predict):
-                writer.writerow([index, houses[int(prediction.item())]])
-        # print("\033[32mPrediction file has been created: "
-        #       "data/houses.csv\033[0m")
+            for index, prediction in enumerate(final_predictions):
+                writer.writerow([index, houses[int(prediction)]])
         print('\n⚪️ Prediction file saved as: {}\n'.format(HOUSES_FILE_PATH))
-        
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(HOUSES_FILE_PATH),
               file=sys.stderr)
@@ -145,8 +136,6 @@ def predict(filename):
     except Exception as e:
         print('❌ Error:', e, file=sys.stderr)
         exit(1)
-
-
 
 
 def main():
@@ -167,11 +156,8 @@ def main():
         print('❌ Error: File not found')
         exit(1)
 
-    # Describe the CSV file
     predict(file_path)
 
 
 if __name__ == "__main__":
     main()
-
-
