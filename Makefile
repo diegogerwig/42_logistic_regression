@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/16 20:44:44 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/20 17:31:36 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ predict:
 	@echo "\n\033[31mPredicting...\033[0m"
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH)
 
-evaluate: train predict
+evaluate: fclean train predict
 	@echo "\n\033[31mLOGISTIC REGRESSION\033[0m"
 	@echo "\n\033[31mEvaluating...\033[0m"
 	@python3 src/test/evaluate.py
@@ -77,7 +77,7 @@ fclean: clean
 	@rm -rf ./data/params.csv
 	@rm -rf ./data/houses.csv
 	@rm -rf ./data/df_num.csv
-		@if [ ! -d "./plots_examples" ]; then \
+	@if [ ! -d "./plots_examples" ]; then \
 		mkdir -p ./plots_examples; \
 	fi
 	@if [ -d "./plots" ]; then \
