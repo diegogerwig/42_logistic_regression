@@ -133,7 +133,6 @@ def train(filename):
 
     ft_describe('data/df_num.csv')
 
-    # Get numeric features
     nb_features = len(df_num.columns)
     x = np.array(df_num)
     y = np.array(df['Hogwarts House'])
