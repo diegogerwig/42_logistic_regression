@@ -21,15 +21,12 @@ def predict(filename):
     '''
 
     thetas = []
-    means = []
-    stds = []
+
     try:
         with open(PARAMS_FILE_PATH, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 thetas.append(np.array([float(theta) for theta in row['theta'].split(',')]).reshape(-1, 1))
-                means.append(np.array([float(mean) for mean in row['mean'].split(',')]).reshape(-1, 1))
-                stds.append(np.array([float(std) for std in row['std'].split(',')]).reshape(-1, 1))
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
               file=sys.stderr)
@@ -85,12 +82,15 @@ def predict(filename):
             print(f"Wrong column type in '{filename} file", file=sys.stderr)
             exit(1)
 
-    df_num = df.select_dtypes(include=['int', 'float'])
+    df_num = df.select_dtypes(include=['int', 'float']).copy()
 
     # Replace NaN data with mean value
     for column in df_num.columns:
+        # if df_num[column].dtype != 'object':
         median = percentile(df_num[column], 0.50)
         df_num[column] = df_num[column].fillna(median)
+
+    # df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
 
     df_num.drop(columns_to_drop, inplace=True, axis=1)
 
@@ -99,17 +99,21 @@ def predict(filename):
 
     df_num.drop('Hogwarts House', inplace=True, axis=1)
 
+    df_num = df_num.iloc[:, 1:]
+
     df_num.info()
+
     input('\nPress Enter to continue...\n')
 
-    # nb features
     nb_features = len(df_num.columns)
+    print(f'❗️ nb_features: {nb_features}')
 
     # set X and y
-    X = np.array(df_num).reshape(-1, nb_features)
-    X_norm, _, _ = normalize_xset(X)
+    # x = np.array(df_num).reshape(400, nb_features)
+    x = np.array(df_num)
+    X_norm, _, _ = normalize_xset(x)
 
-    predictions = np.zeros((X.shape[0], len(houses)))
+    predictions = np.zeros((x.shape[0], len(houses)))
     for model in models:
         predictions += model.predict(X_norm)
 

@@ -111,13 +111,15 @@ def train(filename):
         exit(1)
 
     # Get numeric features
-    df_num = df.select_dtypes(include=['int', 'float'])
+    df_num = df.select_dtypes(include=['int', 'float']).copy()
 
     # Replace NaN data with mean value
     for column in df_num.columns:
         # if df_num[column].dtype != 'object':
         median = percentile(df_num[column], 0.50)
         df_num[column] = df_num[column].fillna(median)
+
+    df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
 
     df_num.info()
     print('\nREPLACE NaN DATA WITH MEAN VALUE')
@@ -133,9 +135,12 @@ def train(filename):
 
     ft_describe('data/df_num.csv')
 
-    nb_features = len(df_num.columns)
-    x = np.array(df_num)
-    y = np.array(df['Hogwarts House'])
+    # nb_features = len(df_num.columns) - 2
+    df_num_excl_first_two = df_num.iloc[:, 2:]
+    nb_features = len(df_num_excl_first_two.columns)
+    x = np.array(df_num_excl_first_two)
+    # x = np.array(df_num.iloc)[:, 2:]
+    y = np.array(df_num['Hogwarts House'])
 
     # Normalize data
     X_norm, means, stds = normalize_xset(x)
@@ -173,14 +178,13 @@ def train(filename):
     try:
         with open(PARAMS_FILE_PATH, 'w') as file:
             writer = csv.writer(file)
-            writer.writerow(["theta", "mean", "std"])
-            for model, house in zip(models, houses):
+            writer.writerow(["theta"])
+            for model in models:
                 last_theta = model.theta[:, -1]
                 theta_str = ','.join([f'{val}' for val in last_theta])
-                mean_str = ','.join([f'{mean}' for mean in means])
-                std_str = ','.join([f'{std}' for std in stds])
-                writer.writerow([theta_str, mean_str, std_str])
+                writer.writerow([theta_str])
         print('\n⚪️ Parameters file saved as: {}\n'.format(PARAMS_FILE_PATH))
+    
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
               file=sys.stderr)
