@@ -79,10 +79,10 @@ class MyLogisticRegression:
         return (probabilities >= 0.5).astype(int)
 
 
-def normalize_xset(X):
-    means = np.mean(X, axis=0)
-    stds = np.std(X, axis=0)
-    X_norm = (X - means) / stds
+def normalize_xset(x):
+    means = np.mean(x, axis=0)
+    stds = np.std(x, axis=0)
+    X_norm = (x - means) / stds
     return X_norm, means, stds
 
 

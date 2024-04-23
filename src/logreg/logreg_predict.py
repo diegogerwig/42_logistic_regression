@@ -120,6 +120,35 @@ def predict(filename):
     # Find the most probable house for each student
     final_predictions = np.argmax(predictions, axis=1)
 
+
+    # predictions = np.zeros((x.shape[0], len(houses)))
+    # for model_idx, model in enumerate(models):
+    #     model_predictions = model.predict(X_norm)
+    #     predictions[:, model_idx] = model_predictions.flatten()
+
+    # final_predictions = np.argmax(predictions, axis=1)
+
+    # predictions = np.zeros((x.shape[0], len(houses)))
+    # for model_idx, model in enumerate(models):
+    #     model_predictions = model.predict(X_norm)
+    #     predictions += model_predictions
+
+    # final_predictions = np.argmax(predictions, axis=1)
+
+
+
+    # predictions = np.zeros((x.shape[0], len(houses)))
+    # for model_idx, model in enumerate(models):
+    #     model_predictions = model.predict(X_norm)
+    #     predictions += model_predictions
+
+    # final_predictions = np.argmax(predictions, axis=1)
+
+    # # Convertir los índices de las predicciones finales en nombres de casas
+    # final_house_predictions = [houses[idx] for idx in final_predictions]
+
+
+
     # predict = np.empty((X.shape[0], 0))
     # for model in models:
     #     predict = np.c_[predict, model.predict(X_norm)]
