@@ -24,3 +24,4 @@ python3 pair_plot.py data/dataset_train.csv
 
 ## INFO
 + https://www.youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe
++ https://www.youtube.com/watch?v=YYEJ_GUguHw&t=13s
