@@ -19,9 +19,7 @@ def predict(filename):
     '''
     Main function to predict the Hogwarts house of students.
     '''
-
     thetas = []
-
     try:
         with open(PARAMS_FILE_PATH, 'r') as file:
             reader = csv.DictReader(file)
@@ -39,9 +37,11 @@ def predict(filename):
         print('❌ Error:', e, file=sys.stderr)
         exit(1)
 
-    models = []
-    for i in range(4):
-        models.append(MyLogisticRegression(thetas[i]))
+    # models = []
+    # for i in range(4):
+    #     models.append(MyLogisticRegression(thetas[i]))
+
+    models = [MyLogisticRegression(theta) for theta in thetas]
 
     try:
         # Read the CSV file into a DataFrame
@@ -101,24 +101,47 @@ def predict(filename):
 
     df_num = df_num.iloc[:, 1:]
 
-    df_num.info()
-
-    input('\nPress Enter to continue...\n')
-
-    nb_features = len(df_num.columns)
-    print(f'❗️ nb_features: {nb_features}')
-
-    # set X and y
-    # x = np.array(df_num).reshape(400, nb_features)
+    # Normalizar los datos y obtener las características X
     x = np.array(df_num)
     X_norm, _, _ = normalize_xset(x)
 
+    # Realizar las predicciones utilizando los modelos
     predictions = np.zeros((x.shape[0], len(houses)))
     for model in models:
         predictions += model.predict(X_norm)
 
-    # Find the most probable house for each student
+    # Encontrar la casa de Hogwarts más probable para cada estudiante
     final_predictions = np.argmax(predictions, axis=1)
+
+
+
+
+
+    # df_num = df_num.iloc[:, 1:]
+
+    # df_num.info()
+
+    # input('\nPress Enter to continue...\n')
+
+    # nb_features = len(df_num.columns)
+    # print(f'❗️ nb_features: {nb_features}')
+
+    # # set X and y
+    # # x = np.array(df_num).reshape(400, nb_features)
+    # x = np.array(df_num)
+    # X_norm, _, _ = normalize_xset(x)
+
+    # predictions = np.zeros((x.shape[0], len(houses)))
+    # for model in models:
+    #     predictions += model.predict(X_norm)
+
+    # # Find the most probable house for each student
+    # final_predictions = np.argmax(predictions, axis=1)
+
+
+
+
+
 
 
     # predictions = np.zeros((x.shape[0], len(houses)))

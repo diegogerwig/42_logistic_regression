@@ -19,8 +19,8 @@ PARAMS_FILE_PATH = 'data/params.csv'
 PLOTS_DIR = './plots'
 
 columns_to_drop = []
-# columns_to_drop = ['Defense Against the Dark Arts', 'Arithmancy', 'Care of Magical Creatures']
-# columns_to_drop = ['Defense Against the Dark Arts', 'Arithmancy', 'Care of Magical Creatures', 'Transfiguration', 'Charms', 'Flying']
+# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
+# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures']
 houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
 
@@ -138,8 +138,10 @@ def train(filename):
     # nb_features = len(df_num.columns) - 2
     df_num_excl_first_two = df_num.iloc[:, 2:]
     nb_features = len(df_num_excl_first_two.columns)
+    column_names = df_num_excl_first_two.columns.tolist()
+    print(f'\n🟠 Number of features: {nb_features}\n')
+    print(column_names)
     x = np.array(df_num_excl_first_two)
-    # x = np.array(df_num.iloc)[:, 2:]
     y = np.array(df_num['Hogwarts House'])
 
     # Normalize data
@@ -153,8 +155,9 @@ def train(filename):
 
     # Train models
     models = []
+    np.random.seed(42)
     for y_train, house in zip(y_trains, houses):
-        # Initialize theta with random values
+        # Initialize theta with ramdom values
         theta = np.random.rand(nb_features + 1, 1600)
         
         # Create an instance of MyLogisticRegression with the initialized theta
@@ -184,7 +187,6 @@ def train(filename):
                 theta_str = ','.join([f'{val}' for val in last_theta])
                 writer.writerow([theta_str])
         print('\n⚪️ Parameters file saved as: {}\n'.format(PARAMS_FILE_PATH))
-    
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
               file=sys.stderr)
