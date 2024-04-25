@@ -21,6 +21,8 @@ PLOTS_DIR = './plots'
 columns_to_drop = []
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures']
+# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures', 'Herbology', 'Potions', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
+
 houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
 
@@ -76,7 +78,8 @@ class MyLogisticRegression:
         m = X.shape[0]
         X = np.hstack((np.ones((m, 1)), X))
         probabilities = self.sigmoid(X.dot(self.theta))
-        return (probabilities >= 0.5).astype(int)
+        # return (probabilities >= 0.5).astype(int)
+        return np.argmax(probabilities, axis=1)
 
 
 def normalize_xset(x):
@@ -95,6 +98,7 @@ def train(filename):
         df = pd.read_csv(filename)
         df.info()
         print('\nINIT CSV FILE')
+        print(df.shape)
         input('\nPress Enter to continue...\n')
 
     except FileNotFoundError:
@@ -123,6 +127,7 @@ def train(filename):
 
     df_num.info()
     print('\nREPLACE NaN DATA WITH MEAN VALUE')
+    print(df_num.shape)
     input('\nPress Enter to continue...\n')
 
     # Drop category features
@@ -131,9 +136,13 @@ def train(filename):
     df_num.info()
     df_num.to_csv('data/df_num.csv', index=False)
     print('\nREMOVE SOME CATEGORY FEATURES')
+    print(f'COLUMNS DROPPED: {columns_to_drop}')
+    print(df_num.shape)
     input('\nPress Enter to continue...\n')
 
     ft_describe('data/df_num.csv')
+    print(df_num.shape)
+
 
     # nb_features = len(df_num.columns) - 2
     df_num_excl_first_two = df_num.iloc[:, 2:]
