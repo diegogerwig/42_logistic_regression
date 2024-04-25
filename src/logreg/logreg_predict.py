@@ -105,17 +105,21 @@ def predict(filename):
     x = np.array(df_num)
     X_norm, _, _ = normalize_xset(x)
 
-    # Realizar las predicciones utilizando los modelos
+    # # Realizar las predicciones utilizando los modelos
+    # predictions = np.zeros((x.shape[0], len(houses)))
+    # for model in models:
+    #     predictions += model.predict(X_norm)
+
+    # # Encontrar la casa de Hogwarts más probable para cada estudiante
+    # final_predictions = np.argmax(predictions, axis=1)
+
     predictions = np.zeros((x.shape[0], len(houses)))
     for model in models:
-        predictions += model.predict(X_norm)
+        # Realizar la predicción y convertirla en una matriz de columna
+        prediction = model.predict(X_norm).reshape(-1, 1)
+        predictions += prediction
 
-    # Encontrar la casa de Hogwarts más probable para cada estudiante
     final_predictions = np.argmax(predictions, axis=1)
-
-
-
-
 
     # df_num = df_num.iloc[:, 1:]
 

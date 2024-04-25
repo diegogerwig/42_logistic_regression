@@ -27,8 +27,8 @@ houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
 
 class MyLogisticRegression:
-    def __init__(self, theta, lr=LEARNING_RATE, max_iter=MAX_ITERATIONS):
-        self.theta = theta
+    def __init__(self, thetas, lr=LEARNING_RATE, max_iter=MAX_ITERATIONS):
+        self.thetas = thetas  # Ahora es una lista de thetas para cada casa
         self.lr = lr
         self.max_iter = max_iter
         self.loss_history = {house: [] for house in houses}
@@ -42,16 +42,19 @@ class MyLogisticRegression:
     def fit(self, X, y, model_name, progress_bar=None):
         m = len(y)
         X = np.hstack((np.ones((m, 1)), X))
-        for _ in tqdm(range(self.max_iter), desc=f'Training {model_name :<11}'):
-            h = self.sigmoid(X.dot(self.theta))
-            error = h - y
-            gradient = X.T.dot(error) / m
-            self.theta -= self.lr * gradient
-            current_loss = self.loss(h, y)
-            for house in houses:
+        for i, (theta, house) in enumerate(zip(self.thetas, houses)):
+            for _ in tqdm(range(self.max_iter), desc=f'Training {model_name} for {house}'):
+                print("Shape of X:", X.shape)
+                print("Shape of theta:", theta.shape)
+                h = self.sigmoid(X.dot(theta))
+                error = h - y
+                gradient = X.T.dot(error) / m
+                updated_theta = theta - self.lr * gradient
+                self.thetas[i] = updated_theta
+                current_loss = self.loss(h, y)
                 self.loss_history[house].append(current_loss)
-            if progress_bar:
-                progress_bar.update(1)
+                if progress_bar:
+                    progress_bar.update(1)
 
     def plot_loss_history(self, model_name):
         plt.figure(figsize=(15, 10))
@@ -77,9 +80,11 @@ class MyLogisticRegression:
     def predict(self, X):
         m = X.shape[0]
         X = np.hstack((np.ones((m, 1)), X))
-        probabilities = self.sigmoid(X.dot(self.theta))
-        # return (probabilities >= 0.5).astype(int)
-        return np.argmax(probabilities, axis=1)
+        probabilities = []
+        for theta in self.thetas:  # Iterar sobre las thetas
+            probabilities.append(self.sigmoid(X.dot(theta)))
+        probabilities = np.array(probabilities)
+        return np.argmax(probabilities, axis=0)
 
 
 def normalize_xset(x):
@@ -162,27 +167,20 @@ def train(filename):
         y_train_house = np.where(y == house, 1, 0)
         y_trains.append(y_train_house)
 
-    # Train models
+    thetas = []  # Aquí se inicializan los thetas para cada casa
+    for _ in range(4):  # Para cada casa
+        theta = np.zeros((nb_features + 1, 1))  # Inicializar theta como un vector de ceros
+        theta = np.expand_dims(theta, axis=1)  # Expandir la dimensión de theta
+        thetas.append(theta)
+
     models = []
-    np.random.seed(42)
-    for y_train, house in zip(y_trains, houses):
-        # Initialize theta with ramdom values
-        theta = np.random.rand(nb_features + 1, 1600)
-        
-        # Create an instance of MyLogisticRegression with the initialized theta
+    for i, (theta, y_train, house) in enumerate(zip(thetas, y_trains, houses)):
         model = MyLogisticRegression(theta, lr=LEARNING_RATE, max_iter=MAX_ITERATIONS)
-        
-        # Initialize tqdm to track progress
         progress_bar = tqdm(total=MAX_ITERATIONS, desc=f'Training {house}', disable=True)
-        
-        # Fit the model with progress bar
         model.fit(X_norm, y_train, house, progress_bar=progress_bar)
-
-        # Close progress bar
         progress_bar.close()
-
-        # Append the trained model to the list of models
         models.append(model)
+
 
     model.plot_loss_history('All Houses')
 
@@ -192,7 +190,7 @@ def train(filename):
             writer = csv.writer(file)
             writer.writerow(["theta"])
             for model in models:
-                last_theta = model.theta[:, -1]
+                last_theta = model.thetas[:, -1]  # Corregir aquí
                 theta_str = ','.join([f'{val}' for val in last_theta])
                 writer.writerow([theta_str])
         print('\n⚪️ Parameters file saved as: {}\n'.format(PARAMS_FILE_PATH))
