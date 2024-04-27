@@ -13,8 +13,8 @@ sys.path.append(module_dir)
 from describe import ft_describe
 from data_analyzer import percentile
 
-MAX_ITERATIONS = 100
-LEARNING_RATE = 1
+MAX_ITERATIONS = 10000
+LEARNING_RATE = 0.01
 PARAMS_FILE_PATH = 'data/params.csv'
 PLOTS_DIR = './plots'
 
@@ -24,9 +24,6 @@ columns_to_drop = []
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures', 'Herbology', 'Potions', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
 
 houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
-
-
-
 
 
 def normalize_xset(x):
@@ -39,19 +36,47 @@ def normalize_xset(x):
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
+
 def gradient_descent(X, y, theta, alpha, num_iters):
     m = len(y)
     J_history = []
-
     for _ in tqdm(range(num_iters)):
         h = sigmoid(np.dot(X, theta))
         J = (-1 / m) * np.sum(y * np.log(h) + (1 - y) * np.log(1 - h))
         J_history.append(J)
         gradient = (1 / m) * np.dot(X.T, (h - y))
         theta -= alpha * gradient
-
     return theta, J_history
 
+
+def accuracy(X, y, theta):
+    m = len(y)
+    y_pred = sigmoid(np.dot(X, theta))
+    y_pred_class = (y_pred >= 0.5).astype(int)
+    accuracy = np.mean(y_pred_class == y)
+    return accuracy
+
+
+def plot_loss_history(houses, loss_histories):
+    plt.figure(figsize=(15, 10))
+    line_styles = ['-']
+    for i, house in enumerate(houses):
+        house_loss_history = np.array(loss_histories[i])
+        line_style = line_styles[i % len(line_styles)]
+        plt.plot(house_loss_history, label=house, linestyle=line_style)
+    plt.title('Loss Function History')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.show(block=False)
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+    save_path = os.path.join(PLOTS_DIR, 'plot_loss_history.png')
+    plt.savefig(save_path)
+    print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+    input('\nPress Enter to continue...\n')
+    plt.close()
 
 
 def train(filename):
@@ -109,16 +134,6 @@ def train(filename):
     print(df_num)
     input('\nPress Enter to continue...\n')
 
-    # df_num.to_csv('data/df_num.csv', index=False)
-    # print('\nREMOVE SOME CATEGORY FEATURES')
-    # print(f'COLUMNS DROPPED: {columns_to_drop}')
-    # print(df_num.shape)
-    # input('\nPress Enter to continue...\n')
-
-    # ft_describe('data/df_num.csv')
-    # print(df_num.shape)
-
-
     # nb_features = len(df_num.columns) - 2
     df_num_excl_first_two = df_num.iloc[:, 2:]
     print('\nREMOVE FIRST TWO COLUMNS')
@@ -170,11 +185,32 @@ def train(filename):
         print(f"Parameters for house {houses[i]} (shape {theta.shape}): \n{theta}")
     input('\nPress Enter to continue...\n')
 
+    # for i, house in enumerate(houses):
+    #     print(f"Training for house: {house}")
+    #     X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
+    #     theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
+    #     thetas[i] = theta
+
+    loss_histories = []
     for i, house in enumerate(houses):
         print(f"Training for house: {house}")
         X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
         thetas[i] = theta
+        loss_histories.append(J_history)
+
+    accuracies = []
+    for i, house in enumerate(houses):
+        # print(f"Evaluating accuracy for house: {house}")
+        X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
+        acc = accuracy(X, y_trains[i].reshape(-1, 1), thetas[i])
+        accuracies.append(acc)
+        print(f"Accuracy for {house}: {acc:.4f}")
+
+    mean_accuracy = np.mean(accuracies)
+    print(f"\nMean accuracy across all houses: {mean_accuracy:.4f}")
+
+    plot_loss_history(houses, loss_histories)
 
     try:
         with open(PARAMS_FILE_PATH, 'w', newline='') as file:
@@ -190,8 +226,6 @@ def train(filename):
     except Exception as e:
         print('❌ Error:', e, file=sys.stderr)
         exit(1)
-
-
 
 
 def main():
