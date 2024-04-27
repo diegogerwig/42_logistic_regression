@@ -45,6 +45,36 @@ def load_trained_parameters(PARAMS_FILE_PATH):
         exit(1)
 
 
+def check_format(filename, col_names, col_types):
+    try:
+        print('\n🔆 INIT CSV FILE')
+        df = pd.read_csv(filename)
+        print(f'\n🟢 File "{filename}" loaded successfully\n')
+    except FileNotFoundError:
+        print('❌ Error: File not found')
+        exit(1)
+    except pd.errors.EmptyDataError:
+        print('❌ Error: Dataset file is empty')
+        exit(1)
+    except pd.errors.ParserError:
+        print('❌ Error: Invalid CSV file format.')
+        exit(1)
+    except Exception as e:
+        print('❌ Error:', e)
+        exit(1)
+
+    col_check = zip(col_names, col_types)
+
+    # Check that the expected columns are present and have the correct type
+    if not set(col_names).issubset(df.columns):
+        print(f"Missing columns in '{filename}' file", file=sys.stderr)
+        exit(1)
+    for name, type_ in col_check:
+        if not df[name].dtype == type_:
+            print(f"Wrong column type in '{filename} file", file=sys.stderr)
+            exit(1)
+
+
 def predict(filename, thetas):
     try:
         # Read the CSV file into a DataFrame
@@ -66,27 +96,6 @@ def predict(filename, thetas):
     except Exception as e:
         print('❌ Error:', e)
         exit(1)
-
-
-    col_names = ["Index", "Hogwarts House", "First Name", "Last Name",
-                    "Birthday", "Best Hand", "Arithmancy", "Astronomy",
-                    "Herbology", "Defense Against the Dark Arts",
-                    "Divination", "Muggle Studies", "Ancient Runes",
-                    "History of Magic", "Transfiguration", "Potions",
-                    "Care of Magical Creatures", "Charms", "Flying"]
-    col_types = [int, None, object, object, object, object, float, float,
-                float, float, float, float, float, float, float, float, float,
-                float, float]
-    col_check = zip(col_names, col_types)
-
-    # check that the expected columns are here and check their type
-    if not set(col_names).issubset(df.columns):
-        print(f"Missing columns in '{filename}' file", file=sys.stderr)
-        exit(1)
-    for name, type_ in col_check:
-        if not df[name].dtype == type_:
-            print(f"Wrong column type in '{filename} file", file=sys.stderr)
-            exit(1)
 
     print('\n🔆 GET NUMERIC FEATURES')
     df_num = df.select_dtypes(include=['int', 'float']).copy()
@@ -148,6 +157,7 @@ def predict(filename, thetas):
     print('\nPredicted houses:')
     print(predicted_houses)
 
+    print('\n🔆 PLOT FEATURE IMPORTANCE')
     skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
     if not skip_input:
         plot_feature_importance(thetas, column_names, houses, PLOTS_DIR)
@@ -155,7 +165,8 @@ def predict(filename, thetas):
     return predicted_houses
 
 
-def save_predictions_to_csv(final_predictions):
+def save_predictions(final_predictions):
+    print('\n🔆 SAVING PREDICTIONS')
     try:
         with open(HOUSES_FILE_PATH, 'w', newline='') as file:
             writer = csv.writer(file)
@@ -196,27 +207,23 @@ def main():
 
     # Load trained parameters
     thetas = load_trained_parameters(PARAMS_FILE_PATH)
-    # try:
-    #     with open(PARAMS_FILE_PATH, 'r') as file:
-    #         reader = csv.reader(file)
-    #         thetas = [np.array([float(val) for val in row[0].split(',')]) for row in reader]
-    #     print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
-    #     for theta in thetas:
-    #         print(' '.join(map(str, theta)))
-    #     custom_input('\nPress ENTER to continue...\n')
-    # except FileNotFoundError:
-    #     print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
-    #     exit(1)
-    # except ValueError:
-    #     print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
-    #     exit(1)
-    # except Exception as e:
-    #     print('❌ Error:', e, file=sys.stderr)
-    #     exit(1)
+
+    col_names = ["Index", "Hogwarts House", "First Name", "Last Name",
+                 "Birthday", "Best Hand", "Arithmancy", "Astronomy",
+                 "Herbology", "Defense Against the Dark Arts",
+                 "Divination", "Muggle Studies", "Ancient Runes",
+                 "History of Magic", "Transfiguration", "Potions",
+                 "Care of Magical Creatures", "Charms", "Flying"]
+    col_types = [int, None, object, object, object, object, float, float,
+                 float, float, float, float, float, float, float, float, float,
+                 float, float]
+
+    # Check format of the CSV file
+    check_format(file_path, col_names, col_types)
 
     predicted_houses = predict(file_path, thetas)
 
-    save_predictions_to_csv(predicted_houses)
+    save_predictions(predicted_houses)
 
 
 if __name__ == "__main__":

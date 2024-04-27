@@ -34,6 +34,24 @@ def custom_input(prompt):
         return input(prompt)
 
 
+def save_parameters(thetas, PARAMS_FILE_PATH):
+    print('\n🔆 SAVING PARAMETERS')
+    try:
+        with open(PARAMS_FILE_PATH, 'w', newline='') as file:
+            writer = csv.writer(file)
+            for theta in thetas:
+                theta_str = ','.join([str(val) for val in theta.flatten()])
+                writer.writerow([theta_str])
+        print('\n⚪️ Parameters file saved as: {}\n'.format(PARAMS_FILE_PATH))
+    except FileNotFoundError:
+        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
+              file=sys.stderr)
+        exit(1)
+    except Exception as e:
+        print('❌ Error:', e, file=sys.stderr)
+        exit(1)
+
+
 def train(filename):
     '''
     Main function to train the logistic model.
@@ -165,21 +183,7 @@ def train(filename):
         print(f"\n❌ Mean accuracy across all houses: {mean_accuracy:.4f}%")
     custom_input('\nPress ENTER to continue...\n')
 
-    print('\n🔆 SAVING PARAMETERS')
-    try:
-        with open(PARAMS_FILE_PATH, 'w', newline='') as file:
-            writer = csv.writer(file)
-            for theta in thetas:
-                theta_str = ','.join([str(val) for val in theta.flatten()])
-                writer.writerow([theta_str])
-        print('\n⚪️ Parameters file saved as: {}\n'.format(PARAMS_FILE_PATH))
-    except FileNotFoundError:
-        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
-              file=sys.stderr)
-        exit(1)
-    except Exception as e:
-        print('❌ Error:', e, file=sys.stderr)
-        exit(1)
+    save_parameters(thetas, PARAMS_FILE_PATH)
 
 
 def main():
