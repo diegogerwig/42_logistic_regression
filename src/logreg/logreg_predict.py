@@ -8,47 +8,21 @@ import pandas as pd
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
-
-from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, MyLogisticRegression, normalize_xset
+from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, normalize_xset, sigmoid
 from data_analyzer import percentile
 
 HOUSES_FILE_PATH = 'data/houses.csv'
 
 
-def predict(filename):
-    '''
-    Main function to predict the Hogwarts house of students.
-    '''
-    thetas = []
-    try:
-        with open(PARAMS_FILE_PATH, 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                thetas.append(np.array([float(theta) for theta in row['theta'].split(',')]).reshape(-1, 1))
-    except FileNotFoundError:
-        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH),
-              file=sys.stderr)
-        exit(1)
-    except ValueError:
-        print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH),
-              file=sys.stderr)
-        exit(1)
-    except Exception as e:
-        print('❌ Error:', e, file=sys.stderr)
-        exit(1)
-
-    # models = []
-    # for i in range(4):
-    #     models.append(MyLogisticRegression(thetas[i]))
-
-    models = [MyLogisticRegression(theta) for theta in thetas]
-
+def predict(filename, thetas):
     try:
         # Read the CSV file into a DataFrame
         df = pd.read_csv(filename)
-        df.info()
         print('\nINIT CSV FILE')
+        df.info()
+        print(df)
         input('\nPress Enter to continue...\n')
+
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
@@ -62,15 +36,16 @@ def predict(filename):
         print('❌ Error:', e)
         exit(1)
 
+
     col_names = ["Index", "Hogwarts House", "First Name", "Last Name",
-                 "Birthday", "Best Hand", "Arithmancy", "Astronomy",
-                 "Herbology", "Defense Against the Dark Arts",
-                 "Divination", "Muggle Studies", "Ancient Runes",
-                 "History of Magic", "Transfiguration", "Potions",
-                 "Care of Magical Creatures", "Charms", "Flying"]
+                    "Birthday", "Best Hand", "Arithmancy", "Astronomy",
+                    "Herbology", "Defense Against the Dark Arts",
+                    "Divination", "Muggle Studies", "Ancient Runes",
+                    "History of Magic", "Transfiguration", "Potions",
+                    "Care of Magical Creatures", "Charms", "Flying"]
     col_types = [int, None, object, object, object, object, float, float,
-                 float, float, float, float, float, float, float, float, float,
-                 float, float]
+                float, float, float, float, float, float, float, float, float,
+                float, float]
     col_check = zip(col_names, col_types)
 
     # check that the expected columns are here and check their type
@@ -82,112 +57,96 @@ def predict(filename):
             print(f"Wrong column type in '{filename} file", file=sys.stderr)
             exit(1)
 
+    # Get numeric features
     df_num = df.select_dtypes(include=['int', 'float']).copy()
+    print('\nGET NUMERIC FEATURES')
+    df_num.info()
+    print(df_num)
+    input('\nPress Enter to continue...\n')
 
     # Replace NaN data with mean value
     for column in df_num.columns:
-        # if df_num[column].dtype != 'object':
         median = percentile(df_num[column], 0.50)
         df_num[column] = df_num[column].fillna(median)
-
-    # df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
-
-    df_num.drop(columns_to_drop, inplace=True, axis=1)
-
+    print('\nREPLACE NaN DATA WITH MEDIAN VALUE')
     df_num.info()
+    print(df_num)
     input('\nPress Enter to continue...\n')
-
-    df_num.drop('Hogwarts House', inplace=True, axis=1)
-
-    df_num = df_num.iloc[:, 1:]
-
-    # Normalizar los datos y obtener las características X
-    x = np.array(df_num)
-    X_norm, _, _ = normalize_xset(x)
-
-    # # Realizar las predicciones utilizando los modelos
-    # predictions = np.zeros((x.shape[0], len(houses)))
-    # for model in models:
-    #     predictions += model.predict(X_norm)
-
-    # # Encontrar la casa de Hogwarts más probable para cada estudiante
-    # final_predictions = np.argmax(predictions, axis=1)
-
-    predictions = np.zeros((x.shape[0], len(houses)))
-    for model in models:
-        # Realizar la predicción y convertirla en una matriz de columna
-        prediction = model.predict(X_norm).reshape(-1, 1)
-        predictions += prediction
-
-    final_predictions = np.argmax(predictions, axis=1)
-
-    # df_num = df_num.iloc[:, 1:]
-
+    
+    # df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
+    # print('\nINSERT HOGWARTS HOUSE COLUMN')
     # df_num.info()
-
+    # print(df_num)
     # input('\nPress Enter to continue...\n')
 
-    # nb_features = len(df_num.columns)
-    # print(f'❗️ nb_features: {nb_features}')
+    # Drop category features
+    df_num.drop(columns_to_drop, inplace=True, axis=1)
+    print('\nREMOVE SOME CATEGORY FEATURES')
+    print(f'COLUMNS DROPPED: {columns_to_drop}')
+    df_num.info()
+    print(df_num)
+    input('\nPress Enter to continue...\n')
 
-    # # set X and y
-    # # x = np.array(df_num).reshape(400, nb_features)
-    # x = np.array(df_num)
-    # X_norm, _, _ = normalize_xset(x)
+    # nb_features = len(df_num.columns) - 2
+    df_num_excl_first_two = df_num.iloc[:, 2:]
+    print('\nREMOVE FIRST TWO COLUMNS')
+    df_num_excl_first_two.info()
+    print(df_num_excl_first_two)
+    input('\nPress Enter to continue...\n')
 
-    # predictions = np.zeros((x.shape[0], len(houses)))
-    # for model in models:
-    #     predictions += model.predict(X_norm)
-
-    # # Find the most probable house for each student
-    # final_predictions = np.argmax(predictions, axis=1)
-
-
-
-
-
-
-
-    # predictions = np.zeros((x.shape[0], len(houses)))
-    # for model_idx, model in enumerate(models):
-    #     model_predictions = model.predict(X_norm)
-    #     predictions[:, model_idx] = model_predictions.flatten()
-
-    # final_predictions = np.argmax(predictions, axis=1)
-
-    # predictions = np.zeros((x.shape[0], len(houses)))
-    # for model_idx, model in enumerate(models):
-    #     model_predictions = model.predict(X_norm)
-    #     predictions += model_predictions
-
-    # final_predictions = np.argmax(predictions, axis=1)
+    nb_features = len(df_num_excl_first_two.columns)
+    column_names = df_num_excl_first_two.columns.tolist()
+    print(f'\nNumber of features: {nb_features}')
+    print(column_names)
+    input('\nPress Enter to continue...\n')
 
 
+    # Normalize the data
+    x = np.array(df_num_excl_first_two)
+    X_norm, _, _ = normalize_xset(x)
 
-    # predictions = np.zeros((x.shape[0], len(houses)))
-    # for model_idx, model in enumerate(models):
-    #     model_predictions = model.predict(X_norm)
-    #     predictions += model_predictions
+    # Add bias term to normalized features
+    X_norm = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
 
-    # final_predictions = np.argmax(predictions, axis=1)
+    # Perform predictions
+    predictions = []
+    for theta in thetas:
+        probability = sigmoid(np.dot(X_norm, theta))
+        predictions.append(probability)
+    print('\nPredictions:')
+    np.set_printoptions(suppress=True, threshold=np.inf)
+    stacked_predictions = np.column_stack(predictions)
+    for pred in predictions:
+        print(len(pred))
+    print(stacked_predictions)
+    input('\nPress Enter to continue...\n')
 
-    # # Convertir los índices de las predicciones finales en nombres de casas
-    # final_house_predictions = [houses[idx] for idx in final_predictions]
+    # Determine predicted house for each instance
+    # Calcular el índice del valor máximo en cada conjunto de cuatro valores
+    predicted_house_indices = np.argmax(stacked_predictions, axis=1)
+
+    # Crear una lista para almacenar las casas predichas
+    predicted_houses = []
+
+    # Iterar sobre los índices calculados y asignar la casa correspondiente
+    for idx in predicted_house_indices:
+        predicted_houses.append(houses[idx])
+
+    # Imprimir las casas predichas
+    print('\nCasas predichas:')
+    print(predicted_houses)
+
+    return predicted_houses
 
 
-
-    # predict = np.empty((X.shape[0], 0))
-    # for model in models:
-    #     predict = np.c_[predict, model.predict(X_norm)]
-    # predict = np.argmax(predict, axis=1).reshape((-1, 1))
-
+def save_predictions_to_csv(final_predictions):
     # Save the predictions to a CSV file
     try:
-        with open(HOUSES_FILE_PATH, 'w') as file:
+        with open(HOUSES_FILE_PATH, 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["Index", "Hogwarts House"])
             for index, prediction in enumerate(final_predictions):
-                writer.writerow([index, houses[int(prediction)]])
+                writer.writerow([index, prediction])
         print('\n⚪️ Prediction file saved as: {}\n'.format(HOUSES_FILE_PATH))
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(HOUSES_FILE_PATH),
@@ -216,7 +175,35 @@ def main():
         print('❌ Error: File not found')
         exit(1)
 
-    predict(file_path)
+    # Load trained parameters
+    try:
+        with open(PARAMS_FILE_PATH, 'r') as file:
+            reader = csv.reader(file)
+            thetas = [np.array([float(val) for val in row[0].split(',')]) for row in reader]
+        print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
+        for theta in thetas:
+            print(' '.join(map(str, theta)))
+        input('\nPress Enter to continue...\n')
+    except FileNotFoundError:
+        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+        exit(1)
+    except ValueError:
+        print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+        exit(1)
+    except Exception as e:
+        print('❌ Error:', e, file=sys.stderr)
+        exit(1)
+
+    # Perform prediction
+    predicted_houses = predict(file_path, thetas)
+
+    # Print predictions
+    print('\nPredictions:')
+    for i, house in enumerate(predicted_houses):
+        print(f"Prediction for instance {i+1}: {house}")
+
+    # Save predictions to a CSV file
+    save_predictions_to_csv(predicted_houses)
 
 
 if __name__ == "__main__":

@@ -10,7 +10,6 @@ from tqdm import tqdm
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
-from describe import ft_describe
 from data_analyzer import percentile
 
 MAX_ITERATIONS = 10000
