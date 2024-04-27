@@ -6,7 +6,7 @@ def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
 
-def gradient_descent(X, y, theta, alpha, num_iters):
+def gradient_descent(X, y, theta, lr, num_iters, threshold=1e-4):
     m = len(y)
     J_history = []
     for _ in tqdm(range(num_iters)):
@@ -14,5 +14,7 @@ def gradient_descent(X, y, theta, alpha, num_iters):
         J = (-1 / m) * np.sum(y * np.log(h) + (1 - y) * np.log(1 - h))
         J_history.append(J)
         gradient = (1 / m) * np.dot(X.T, (h - y))
-        theta -= alpha * gradient
+        theta -= lr * gradient
+        if len(J_history) > 1 and abs(J_history[-1] - J_history[-2]) < threshold:
+            break
     return theta, J_history
