@@ -28,7 +28,7 @@ def plot_loss_history(houses, loss_histories, PLOTS_DIR):
 def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
     num_houses = len(thetas)
     num_features = len(column_names)
-    fig, axes = plt.subplots(num_houses, 1, figsize=(15, 13), sharex=True)
+    fig, axes = plt.subplots(num_houses, 1, figsize=(15, 12), sharex=True)
     for i, theta in enumerate(thetas):
         feature_importance = abs(theta[1:])
         bars = axes[i].barh(column_names, feature_importance)

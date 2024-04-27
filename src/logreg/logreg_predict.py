@@ -24,15 +24,36 @@ def custom_input(prompt):
         return input(prompt)
 
 
+def load_trained_parameters(PARAMS_FILE_PATH):
+    try:
+        with open(PARAMS_FILE_PATH, 'r') as file:
+            reader = csv.reader(file)
+            thetas = [np.array([float(val) for val in row[0].split(',')]) for row in reader]
+        print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
+        for theta in thetas:
+            print(' '.join(map(str, theta)))
+        custom_input('\nPress ENTER to continue...\n')
+        return thetas
+    except FileNotFoundError:
+        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+        exit(1)
+    except ValueError:
+        print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+        exit(1)
+    except Exception as e:
+        print('❌ Error:', e, file=sys.stderr)
+        exit(1)
+
+
 def predict(filename, thetas):
     try:
         # Read the CSV file into a DataFrame
+        print('\n🔆 INIT CSV FILE')
         df = pd.read_csv(filename)
-        print('\nINIT CSV FILE')
+        print(f'\n🟢 File "{filename}" loaded successfully\n')
         df.info()
         print(df)
         custom_input('\nPress ENTER to continue...\n')
-
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
@@ -67,57 +88,51 @@ def predict(filename, thetas):
             print(f"Wrong column type in '{filename} file", file=sys.stderr)
             exit(1)
 
-    # Get numeric features
+    print('\n🔆 GET NUMERIC FEATURES')
     df_num = df.select_dtypes(include=['int', 'float']).copy()
-    print('\nGET NUMERIC FEATURES')
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
 
-    # Replace NaN data with mean value
+    print('\n🔆 REPLACE NaN DATA WITH MEDIAN VALUE')
     for column in df_num.columns:
         median = percentile(df_num[column], 0.50)
         df_num[column] = df_num[column].fillna(median)
-    print('\nREPLACE NaN DATA WITH MEDIAN VALUE')
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
 
-    # Drop category features
+    print('\n🔆 REMOVE SOME CATEGORY FEATURES')
     df_num.drop(columns_to_drop, inplace=True, axis=1)
-    print('\nREMOVE SOME CATEGORY FEATURES')
-    print(f'COLUMNS DROPPED: {columns_to_drop}')
+    print(f'   COLUMNS DROPPED: {columns_to_drop}')
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
 
-    # nb_features = len(df_num.columns) - 2
+    print('\n🔆 REMOVE FIRST TWO COLUMNS')
     df_num_excl_first_two = df_num.iloc[:, 2:]
-    print('\nREMOVE FIRST TWO COLUMNS')
     df_num_excl_first_two.info()
     print(df_num_excl_first_two)
     custom_input('\nPress ENTER to continue...\n')
 
     nb_features = len(df_num_excl_first_two.columns)
     column_names = df_num_excl_first_two.columns.tolist()
-    print(f'\nNumber of features: {nb_features}')
+    print(f'\n   Number of features: {nb_features}')
     print(column_names)
     custom_input('\nPress ENTER to continue...\n')
 
-
-    # Normalize the data
+    print('\n🔆 NORMALIZE DATA')
     x = np.array(df_num_excl_first_two)
     X_norm = normalize_xset(x)
-
     # Add bias term to normalized features
-    X_norm = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
+    X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
 
-    # Perform predictions
+    print('\n🔆 PERFORM PREDICTIONS')
     predictions = []
     for theta in thetas:
-        probability = sigmoid(np.dot(X_norm, theta))
+        probability = sigmoid(np.dot(X, theta))
         predictions.append(probability)
-    print('\nPredictions:')
+    print('\nPredictions values:')
     np.set_printoptions(suppress=True, threshold=np.inf)
     stacked_predictions = np.column_stack(predictions)
     for pred in predictions:
@@ -125,15 +140,12 @@ def predict(filename, thetas):
     print(stacked_predictions)
     custom_input('\nPress ENTER to continue...\n')
 
-
     predicted_house_indices = np.argmax(stacked_predictions, axis=1)
-
     predicted_houses = []
-
     for idx in predicted_house_indices:
         predicted_houses.append(houses[idx])
 
-    print('\nCasas predichas:')
+    print('\nPredicted houses:')
     print(predicted_houses)
 
     skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
@@ -183,33 +195,27 @@ def main():
         exit(1)
 
     # Load trained parameters
-    try:
-        with open(PARAMS_FILE_PATH, 'r') as file:
-            reader = csv.reader(file)
-            thetas = [np.array([float(val) for val in row[0].split(',')]) for row in reader]
-        print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
-        for theta in thetas:
-            print(' '.join(map(str, theta)))
-        custom_input('\nPress ENTER to continue...\n')
-    except FileNotFoundError:
-        print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
-        exit(1)
-    except ValueError:
-        print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
-        exit(1)
-    except Exception as e:
-        print('❌ Error:', e, file=sys.stderr)
-        exit(1)
+    thetas = load_trained_parameters(PARAMS_FILE_PATH)
+    # try:
+    #     with open(PARAMS_FILE_PATH, 'r') as file:
+    #         reader = csv.reader(file)
+    #         thetas = [np.array([float(val) for val in row[0].split(',')]) for row in reader]
+    #     print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
+    #     for theta in thetas:
+    #         print(' '.join(map(str, theta)))
+    #     custom_input('\nPress ENTER to continue...\n')
+    # except FileNotFoundError:
+    #     print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+    #     exit(1)
+    # except ValueError:
+    #     print('❌ Error: Reading file {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
+    #     exit(1)
+    # except Exception as e:
+    #     print('❌ Error:', e, file=sys.stderr)
+    #     exit(1)
 
-    # Perform prediction
     predicted_houses = predict(file_path, thetas)
 
-    # Print predictions
-    print('\nPredictions:')
-    for i, house in enumerate(predicted_houses):
-        print(f"Prediction for instance {i+1}: {house}")
-
-    # Save predictions to a CSV file
     save_predictions_to_csv(predicted_houses)
 
 

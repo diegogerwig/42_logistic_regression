@@ -6,7 +6,7 @@ def sigmoid(z):
     return 1 / (1 + np.exp(-z))
 
 
-def gradient_descent(X, y, theta, lr, num_iters, threshold=1e-4):
+def gradient_descent(X, y, theta, lr, num_iters, threshold=1e-5):
     m = len(y)
     J_history = []
     for _ in tqdm(range(num_iters)):

@@ -39,13 +39,12 @@ def train(filename):
     Main function to train the logistic model.
     '''
     try:
-        print('\n🟡 INIT CSV FILE')
+        print('\n🔆 INIT CSV FILE')
         df = pd.read_csv(filename)
         print(f'\n🟢 File "{filename}" loaded successfully\n')
         df.info()
         print(df)
         custom_input('\nPress ENTER to continue...\n')
-
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
@@ -110,28 +109,26 @@ def train(filename):
     print(y)
     custom_input('\nPress ENTER to continue...\n')
 
-    # Normalize data
     print('\n🔆 NORMALIZE DATA')
     X_norm = normalize_xset(x)
     print(X_norm.shape)
     print(X_norm)
     custom_input('\nPress ENTER to continue...\n')
 
-    # Create label sets to train models
+    print('\n🔆 CREATE LABEL SETS')
     y_trains = []
     for house in houses:
         y_train_house = np.where(y == house, 1, 0)
         y_trains.append(y_train_house)
-    print('\n🔆 CREATE LABEL SETS')
     for i, house in enumerate(houses):
         print(f"Labels for {house}: \t{y_trains[i][:20]}")
     custom_input('\nPress ENTER to continue...\n')
 
-    thetas = []  
-    for _ in range(4):  
-        theta = np.zeros((nb_features + 1, 1))  
-        thetas.append(theta)
     print('\n🔆 INITIALIZE THETAS')
+    thetas = []
+    for _ in range(4):
+        theta = np.zeros((nb_features + 1, 1))
+        thetas.append(theta)
     for i, theta in enumerate(thetas):
         print(f"   Parameters for house {houses[i]} (shape {theta.shape}): \n{theta}")
     custom_input('\nPress ENTER to continue...\n')
@@ -140,6 +137,7 @@ def train(filename):
     loss_histories = []
     for i, house in enumerate(houses):
         print(f"\n🟡 Training for house: {house}")
+        # Add bias term to normalized features
         X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
         thetas[i] = theta
