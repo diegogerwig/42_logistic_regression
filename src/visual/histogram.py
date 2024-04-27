@@ -57,7 +57,7 @@ def histogram(filename):
     # Draw histogram and KDE for each category
     for ax, class_ in zip(axes.flatten(), categories):
         if class_ in df.columns and not df[class_].isnull().all():
-            ax.set_title(class_, fontsize=10)
+            ax.set_title(class_, fontsize=13)
 
             # Draw histogram and KDE for each house
             for house, color in zip(houses, colors):

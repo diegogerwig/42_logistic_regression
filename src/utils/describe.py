@@ -23,7 +23,6 @@ def data_stats(feature):
         '75%': percentile(feature, 0.75),
         'max': percentile(feature, 1),
         '-----': 0,
-        'mode': mode(feature),
         'freq': frequency(feature)
     }
 
@@ -47,7 +46,7 @@ def display(data):
 
         # Display statistics
         for legend in ['count', 'mean', 'std', 'min',
-                       '25%', '50%', '75%', 'max', '-----', 'mode', 'freq']:
+                       '25%', '50%', '75%', 'max', '-----', 'freq']:
             line = f'{legend:6s}'
             if legend == '-----':  # Check if legend is '----'
                 line += '-' * 112  # Print dashes for each column
@@ -70,6 +69,8 @@ def ft_describe(filename):
     try:
         # Read the CSV file into a DataFrame
         df = pd.read_csv(filename)
+        print(f'🟢 File "{filename}" loaded successfully\n')
+        print('🔍 Analyzing the dataset...\n')
         df.info()
         input('\nPress Enter to continue...\n')
 
@@ -103,6 +104,7 @@ def ft_describe(filename):
                 if df[column].dtype != 'object':
                     median = percentile(df[column], 0.50)
                     df[column] = df[column].fillna(median)
+            print('\n🔄 Null values replaced with median\n')
             df.info()
             # Export the modified DataFrame to a new CSV file
             new_filename = filename.replace('.csv', '_clean.csv')
@@ -137,7 +139,7 @@ def main():
         exit(1)
 
     # Describe the CSV file
-    describe(file_path)
+    ft_describe(file_path)
 
 
 if __name__ == '__main__':

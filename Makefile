@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/20 17:31:36 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/27 13:29:09 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,32 +26,17 @@ describe:
 histogram:
 	@echo "\n\033[31mDATA VISUALIZATION\033[0m"
 	@echo "\n\033[31mGenerating histogram...\033[0m"
-	@if [ -f "$(DATA_CLEAN_FILE_PATH)" ]; \
-	then \
-		python3 src/visual/histogram.py $(DATA_CLEAN_FILE_PATH); \
-	else \
-		python3 src/visual/histogram.py $(DATA_TRAIN_FILE_PATH); \
-	fi
+	@python3 src/visual/histogram.py $(DATA_TRAIN_FILE_PATH)
 
 scatter:
 	@echo "\n\033[31mDATA VISUALIZATION\033[0m"
 	@echo "\n\033[31mGenerating scatter plot...\033[0m"
-	@if [ -f "$(DATA_CLEAN_FILE_PATH)" ]; \
-	then \
-		python3 src/visual/scatter_plot.py $(DATA_CLEAN_FILE_PATH); \
-	else \
-		python3 src/visual/scatter_plot.py $(DATA_TRAIN_FILE_PATH); \
-	fi
+	@python3 src/visual/scatter_plot.py $(DATA_TRAIN_FILE_PATH)
 
 pair:
 	@echo "\n\033[31mDATA VISUALIZATION\033[0m"
 	@echo "\n\033[31mGenerating pair plot...\033[0m"
-	@if [ -f "$(DATA_CLEAN_FILE_PATH)" ]; \
-	then \
-		python3 src/visual/pair_plot.py $(DATA_CLEAN_FILE_PATH); \
-	else \
-		python3 src/visual/pair_plot.py $(DATA_TRAIN_FILE_PATH); \
-	fi
+	@python3 src/visual/pair_plot.py $(DATA_TRAIN_FILE_PATH)
 
 train:
 	@echo "\n\033[31mLOGISTIC REGRESSION\033[0m"

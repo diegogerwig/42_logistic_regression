@@ -50,6 +50,27 @@ def percentile(data, percentile):
         return percentile
 
 
+def frequency(data):
+    """
+    Calculate the maximum frequency of any value in a list.
+    """
+    # Create a dictionary to count the frequency of each element
+    frequencies = {}
+    for item in data:
+        if item in frequencies:
+            frequencies[item] += 1
+        else:
+            frequencies[item] = 1
+
+    # Find the maximum frequency
+    max_frequency = 0
+    for frequency in frequencies.values():
+        if frequency > max_frequency:
+            max_frequency = frequency
+
+    return max_frequency
+
+
 def mode(data):
     """
     Calculate the mode of a list of values.
@@ -73,22 +94,11 @@ def mode(data):
     return mode
 
 
-def frequency(data):
+def top(column):
     """
-    Calculate the maximum frequency of any value in a list.
+    Calculate the most common value in a column of a DataFrame.
     """
-    # Create a dictionary to count the frequency of each element
-    frequencies = {}
-    for item in data:
-        if item in frequencies:
-            frequencies[item] += 1
-        else:
-            frequencies[item] = 1
+    value_counts = column.value_counts()
+    top_value = value_counts.idxmax()
 
-    # Find the maximum frequency
-    max_frequency = 0
-    for frequency in frequencies.values():
-        if frequency > max_frequency:
-            max_frequency = frequency
-
-    return max_frequency
+    return top_value
