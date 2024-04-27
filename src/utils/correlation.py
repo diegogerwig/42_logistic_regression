@@ -42,6 +42,10 @@ def correlation(filename):
     pd.set_option('display.max_colwidth', None)
     print(results_df)
 
+    product_correlation = correlation_matrix.abs().prod()
+    variable_max_corr_product = product_correlation.idxmax()
+    print("La variable con el mayor producto de coeficientes de correlación absolutos es:", variable_max_corr_product)
+
 
 def main():
     # Check if the correct number of arguments is provided

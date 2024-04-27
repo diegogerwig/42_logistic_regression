@@ -27,6 +27,13 @@ columns_to_drop = []
 houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
 
+def custom_input(prompt):
+    if "--skip-input" in sys.argv:
+        return " "
+    else:
+        return input(prompt)
+
+
 def train(filename):
     '''
     Main function to train the logistic model.
@@ -34,10 +41,10 @@ def train(filename):
     try:
         print('\n🟡 INIT CSV FILE')
         df = pd.read_csv(filename)
-        print(f'🟢 File "{filename}" loaded successfully\n')
+        print(f'\n🟢 File "{filename}" loaded successfully\n')
         df.info()
         print(df)
-        input('\nPress Enter to continue...\n')
+        custom_input('\nPress ENTER to continue...\n')
 
     except FileNotFoundError:
         print('❌ Error: File not found')
@@ -56,7 +63,7 @@ def train(filename):
     df_num = df.select_dtypes(include=['int', 'float']).copy()
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 REPLACE NaN DATA WITH MEDIAN VALUE')
     for column in df_num.columns:
@@ -64,51 +71,51 @@ def train(filename):
         df_num[column] = df_num[column].fillna(median)
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
     
     print('\n🔆 INSERT HOGWARTS HOUSE COLUMN')
     df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 REMOVE SOME CATEGORY FEATURES')
     df_num.drop(columns_to_drop, inplace=True, axis=1)
     print(f'   COLUMNS DROPPED: {columns_to_drop}')
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 REMOVE FIRST TWO COLUMNS')
     df_num_excl_first_two = df_num.iloc[:, 2:]
     df_num_excl_first_two.info()
     print(df_num_excl_first_two)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     nb_features = len(df_num_excl_first_two.columns)
     column_names = df_num_excl_first_two.columns.tolist()
     print(f'\n   Number of features: {nb_features}')
     print(column_names)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 CONVERT DATAFRAME TO NUMPY ARRAY')
     x = np.array(df_num_excl_first_two)
     print(x.shape)
     print(x)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 GET HOGWARTS HOUSE COLUMN')
     y = np.array(df_num['Hogwarts House'])
     print(y.shape)
     print(y)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     # Normalize data
     print('\n🔆 NORMALIZE DATA')
     X_norm = normalize_xset(x)
     print(X_norm.shape)
     print(X_norm)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     # Create label sets to train models
     y_trains = []
@@ -118,7 +125,7 @@ def train(filename):
     print('\n🔆 CREATE LABEL SETS')
     for i, house in enumerate(houses):
         print(f"Labels for {house}: \t{y_trains[i][:20]}")
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     thetas = []  
     for _ in range(4):  
@@ -127,7 +134,7 @@ def train(filename):
     print('\n🔆 INITIALIZE THETAS')
     for i, theta in enumerate(thetas):
         print(f"   Parameters for house {houses[i]} (shape {theta.shape}): \n{theta}")
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 TRAINING')
     loss_histories = []
@@ -137,10 +144,12 @@ def train(filename):
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
         thetas[i] = theta
         loss_histories.append(J_history)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 PLOTTING LOSS HISTORY')
-    plot_loss_history(houses, loss_histories, PLOTS_DIR)
+    skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
+    if not skip_input:
+        plot_loss_history(houses, loss_histories, PLOTS_DIR)
 
     print('\n🔆 CALCULATING ACCURACY')
     accuracies = []
@@ -156,7 +165,7 @@ def train(filename):
         print(f"\n✅ Mean accuracy across all houses: {mean_accuracy:.4f}%.")
     else:
         print(f"\n❌ Mean accuracy across all houses: {mean_accuracy:.4f}%")
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 SAVING PARAMETERS')
     try:
@@ -180,8 +189,12 @@ def main():
     Main function of the program.
     '''
     # Check if the correct number of arguments is provided
-    if len(sys.argv) != 2:
-        print('❗️ Usage: python3 logreg_train.py data*.csv')
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
+        print('❗️ Usage: python3 script.py data*.csv [--skip-input]')
+        exit(1)
+                
+    if len(sys.argv) == 3 and sys.argv[2] != '--skip-input':
+        print('❌ Error: Invalid argument') 
         exit(1)
 
     # Get the file path from command line arguments

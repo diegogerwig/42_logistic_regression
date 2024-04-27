@@ -16,6 +16,13 @@ from gradient import sigmoid
 HOUSES_FILE_PATH = 'data/houses.csv'
 
 
+def custom_input(prompt):
+    if "--skip-input" in sys.argv:
+        return " "
+    else:
+        return input(prompt)
+
+
 def predict(filename, thetas):
     try:
         # Read the CSV file into a DataFrame
@@ -23,7 +30,7 @@ def predict(filename, thetas):
         print('\nINIT CSV FILE')
         df.info()
         print(df)
-        input('\nPress Enter to continue...\n')
+        custom_input('\nPress ENTER to continue...\n')
 
     except FileNotFoundError:
         print('❌ Error: File not found')
@@ -64,7 +71,7 @@ def predict(filename, thetas):
     print('\nGET NUMERIC FEATURES')
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     # Replace NaN data with mean value
     for column in df_num.columns:
@@ -73,13 +80,13 @@ def predict(filename, thetas):
     print('\nREPLACE NaN DATA WITH MEDIAN VALUE')
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
     
     # df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
     # print('\nINSERT HOGWARTS HOUSE COLUMN')
     # df_num.info()
     # print(df_num)
-    # input('\nPress Enter to continue...\n')
+    # custom_input('\nPress ENTER to continue...\n')
 
     # Drop category features
     df_num.drop(columns_to_drop, inplace=True, axis=1)
@@ -87,20 +94,20 @@ def predict(filename, thetas):
     print(f'COLUMNS DROPPED: {columns_to_drop}')
     df_num.info()
     print(df_num)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     # nb_features = len(df_num.columns) - 2
     df_num_excl_first_two = df_num.iloc[:, 2:]
     print('\nREMOVE FIRST TWO COLUMNS')
     df_num_excl_first_two.info()
     print(df_num_excl_first_two)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     nb_features = len(df_num_excl_first_two.columns)
     column_names = df_num_excl_first_two.columns.tolist()
     print(f'\nNumber of features: {nb_features}')
     print(column_names)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
 
     # Normalize the data
@@ -121,7 +128,7 @@ def predict(filename, thetas):
     for pred in predictions:
         print(len(pred))
     print(stacked_predictions)
-    input('\nPress Enter to continue...\n')
+    custom_input('\nPress ENTER to continue...\n')
 
     # Determine predicted house for each instance
     # Calcular el índice del valor máximo en cada conjunto de cuatro valores
@@ -164,8 +171,12 @@ def main():
     Main function of the program.
     '''
     # Check if the correct number of arguments is provided
-    if len(sys.argv) != 2:
-        print('❗️ Usage: python3 logreg_train.py data*.csv')
+    if len(sys.argv) != 2 and len(sys.argv) != 3:
+        print('❗️ Usage: python3 script.py data*.csv [--skip-input]')
+        exit(1)
+                
+    if len(sys.argv) == 3 and sys.argv[2] != '--skip-input':
+        print('❌ Error: Invalid argument') 
         exit(1)
 
     # Get the file path from command line arguments
@@ -185,7 +196,7 @@ def main():
         print('\n🟢 Trained parameters loaded from: {}\n'.format(PARAMS_FILE_PATH))
         for theta in thetas:
             print(' '.join(map(str, theta)))
-        input('\nPress Enter to continue...\n')
+        custom_input('\nPress ENTER to continue...\n')
     except FileNotFoundError:
         print('❌ Error: File not found {}'.format(PARAMS_FILE_PATH), file=sys.stderr)
         exit(1)
