@@ -23,3 +23,29 @@ def plot_loss_history(houses, loss_histories, PLOTS_DIR):
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
     plt.close()
+
+
+def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
+    num_houses = len(thetas)
+    num_features = len(column_names)
+    fig, axes = plt.subplots(num_houses, 1, figsize=(15, 13), sharex=True)
+    for i, theta in enumerate(thetas):
+        feature_importance = abs(theta[1:])
+        bars = axes[i].barh(column_names, feature_importance)
+        axes[i].set_title(f'House {houses[i]} Feature Importance')
+        axes[i].set_xlabel('Importance')
+        axes[i].set_ylabel('Feature')
+        axes[i].invert_xaxis()
+        axes[i].grid(axis='x')
+        for bar in bars:
+            width = bar.get_width()
+            axes[i].text(width, bar.get_y() + bar.get_height()/2, '{:.2f}'.format(width),
+                         va='center', ha='left', fontsize=8)
+    plt.tight_layout()
+    plt.show(block=False)
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+    save_path = os.path.join(PLOTS_DIR, 'plot_feature_importance.png')
+    plt.savefig(save_path)
+    print('\n⚪️ Plot saved as: {}\n'.format(save_path))
+    input('\nPress Enter to continue...\n')
+    plt.close()

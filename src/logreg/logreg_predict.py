@@ -8,10 +8,11 @@ import pandas as pd
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
-from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH
+from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, PLOTS_DIR
 from stats import percentile
 from normalize import normalize_xset
 from gradient import sigmoid
+from plotter import plot_feature_importance
 
 HOUSES_FILE_PATH = 'data/houses.csv'
 
@@ -81,12 +82,6 @@ def predict(filename, thetas):
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
-    
-    # df_num.insert(1, 'Hogwarts House', df['Hogwarts House'])
-    # print('\nINSERT HOGWARTS HOUSE COLUMN')
-    # df_num.info()
-    # print(df_num)
-    # custom_input('\nPress ENTER to continue...\n')
 
     # Drop category features
     df_num.drop(columns_to_drop, inplace=True, axis=1)
@@ -130,26 +125,25 @@ def predict(filename, thetas):
     print(stacked_predictions)
     custom_input('\nPress ENTER to continue...\n')
 
-    # Determine predicted house for each instance
-    # Calcular el índice del valor máximo en cada conjunto de cuatro valores
+
     predicted_house_indices = np.argmax(stacked_predictions, axis=1)
 
-    # Crear una lista para almacenar las casas predichas
     predicted_houses = []
 
-    # Iterar sobre los índices calculados y asignar la casa correspondiente
     for idx in predicted_house_indices:
         predicted_houses.append(houses[idx])
 
-    # Imprimir las casas predichas
     print('\nCasas predichas:')
     print(predicted_houses)
+
+    skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
+    if not skip_input:
+        plot_feature_importance(thetas, column_names, houses, PLOTS_DIR)
 
     return predicted_houses
 
 
 def save_predictions_to_csv(final_predictions):
-    # Save the predictions to a CSV file
     try:
         with open(HOUSES_FILE_PATH, 'w', newline='') as file:
             writer = csv.writer(file)

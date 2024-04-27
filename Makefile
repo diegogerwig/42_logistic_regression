@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/27 18:12:06 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/27 18:53:55 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ optimize: fclean
 	@echo "\n\033[31mOptimizing...\033[0m"
 	@python3 src/utils/correlation.py $(DATA_TRAIN_FILE_PATH)
 
-express:
+express: fclean
 	@python3 src/logreg/logreg_train.py $(DATA_TRAIN_FILE_PATH) --skip-input
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH) --skip-input
 	@python3 src/test/evaluate.py --skip-input
