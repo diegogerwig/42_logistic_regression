@@ -8,8 +8,10 @@ import pandas as pd
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
-from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, normalize_xset, sigmoid
-from data_analyzer import percentile
+from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH
+from stats import percentile
+from normalize import normalize_xset
+from gradient import sigmoid
 
 HOUSES_FILE_PATH = 'data/houses.csv'
 
@@ -103,7 +105,7 @@ def predict(filename, thetas):
 
     # Normalize the data
     x = np.array(df_num_excl_first_two)
-    X_norm, _, _ = normalize_xset(x)
+    X_norm = normalize_xset(x)
 
     # Add bias term to normalized features
     X_norm = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
