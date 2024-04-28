@@ -111,7 +111,7 @@ def train(filename):
 
     nb_features = len(df_num_excl_first_two.columns)
     column_names = df_num_excl_first_two.columns.tolist()
-    print(f'\n   Number of features: {nb_features}')
+    print(f'\n🔆 NUMBER OF FEATURES: {nb_features}')
     print(column_names)
     custom_input('\nPress ENTER to continue...\n')
 

@@ -12,7 +12,7 @@ from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, PLOTS_DIR
 from stats import percentile
 from normalize import normalize_xset
 from gradient import sigmoid
-from plotter import plot_feature_importance
+from plotter import plot_feature_importance, plot_house_influence
 
 HOUSES_FILE_PATH = 'data/houses.csv'
 
@@ -25,6 +25,7 @@ def custom_input(prompt):
 
 
 def load_trained_parameters(PARAMS_FILE_PATH):
+    print('\n🔆 LOAD TRAINED PARAMETERS')
     try:
         with open(PARAMS_FILE_PATH, 'r') as file:
             reader = csv.reader(file)
@@ -126,7 +127,7 @@ def predict(filename, thetas):
 
     nb_features = len(df_num_excl_first_two.columns)
     column_names = df_num_excl_first_two.columns.tolist()
-    print(f'\n   Number of features: {nb_features}')
+    print(f'\n🔆 NUMBER OF FEATURES: {nb_features}')
     print(column_names)
     custom_input('\nPress ENTER to continue...\n')
 
