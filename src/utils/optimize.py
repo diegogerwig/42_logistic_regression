@@ -77,7 +77,7 @@ def main():
     removed_features = []
 
     while len(variables) > 1:
-        accuracy = train(file_path, removed_features)
+        accuracy = train(file_path, removed_features, skip_intro=True)
         print(f"\nMean accuracy across all houses: {accuracy:.4f}%.")
         variables = [var for var in variables if var not in removed_features]
         print(f'\n🟩 Current features ({len(variables)}): {variables}')

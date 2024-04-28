@@ -52,7 +52,7 @@ def save_parameters(thetas, PARAMS_FILE_PATH):
         exit(1)
 
 
-def train(filename, removed_features):
+def train(filename, removed_features, skip_input=False):
     '''
     Main function to train the logistic model.
     '''
@@ -214,7 +214,9 @@ def main():
         exit(1)
 
     removed_features = []
-    train(file_path, removed_features)
+    if "--skip-input" in sys.argv:
+        skip_input = True
+    train(file_path, removed_features, skip_input)
 
 
 if __name__ == "__main__":
