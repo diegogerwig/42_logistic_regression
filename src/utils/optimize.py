@@ -45,7 +45,7 @@ def correlation(filename, variables, removed_features):
     variable_max_corr_product = product_correlation.idxmax()
     print(f'\n🏆 Feature with highest product of absolute correlation coefficients: {variable_max_corr_product}\n')
 
-    return variable_max_corr_product
+    return variable_max_corr_product, correlation_matrix
 
 
 def main():
@@ -68,21 +68,18 @@ def main():
                  'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
     removed_features = []
 
-    while True:
+    while len(variables) > 1:
         variables = [var for var in variables if var not in removed_features]
         print(f'\n🟩 Current features ({len(variables)}): {variables}')
         print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
-        # input('\nPress Enter to continue...\n')
-        variable_max_corr_product = correlation(file_path, variables, removed_features)
-
+        variable_max_corr_product, correlation_matrix = correlation(file_path, variables, removed_features)
         print(f'\nVariable with highest product of absolute correlation coefficients: {variable_max_corr_product}')
         answer = input('Do you want to discard this feature? (yes/no): ').lower()
         if answer == 'yes':
             removed_features.append(variable_max_corr_product)
+            variables.remove(variable_max_corr_product)
         else:
             break
-
-
 
     print('\n🔆 FINAL RESULT')
     print(f'\n🟩 Current features ({len(variables)}): {variables}')
