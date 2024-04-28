@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/27 19:43:16 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/28 17:50:32 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,13 +53,8 @@ evaluate: fclean train predict
 	@echo "\n\033[31mEvaluating...\033[0m"
 	@python3 src/test/evaluate.py
 
-correlation: fclean
-	@echo "\n\033[31mOPTIMIZE FEATURES\033[0m"
-	@echo "\n\033[31mOptimizing...\033[0m"
-	@python3 src/utils/correlation.py $(DATA_TRAIN_FILE_PATH)
-
 optimize: fclean
-	@echo "\n\033[31mOPTIMIZE FEATURES\033[0m"
+	@echo "\n\033[31mOPTIMIZE SELECTED FEATURES\033[0m"
 	@echo "\n\033[31mOptimizing...\033[0m"
 	@python3 src/utils/optimize.py $(DATA_TRAIN_FILE_PATH)
 

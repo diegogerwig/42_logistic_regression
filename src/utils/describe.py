@@ -1,7 +1,7 @@
 import sys
 import os
 import pandas as pd
-from data_analyzer import mean, std, percentile, mode, frequency
+from stats import mean, std, percentile, mode, frequency
 
 
 def data_stats(feature):
@@ -73,7 +73,6 @@ def ft_describe(filename):
         print('🔍 Analyzing the dataset...\n')
         df.info()
         input('\nPress Enter to continue...\n')
-
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
