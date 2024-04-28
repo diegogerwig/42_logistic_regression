@@ -2,10 +2,15 @@ import sys
 import os
 import pandas as pd
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+module_dir = os.path.join(os.path.dirname(current_dir), 'logreg')
+sys.path.append(module_dir)
+from logreg_train import train
+
 
 def correlation(filename, variables, removed_features):
     try:
-        print('\n🔆 INIT CSV FILE')
+        print('\n🔆 READ CSV FILE')
         data = pd.read_csv(filename)
         print(f'\n🟢 File "{filename}" loaded successfully\n')
     except FileNotFoundError:
@@ -20,6 +25,8 @@ def correlation(filename, variables, removed_features):
     except Exception as e:
         print('❌ Error:', e)
         exit(1)
+
+    data.dropna(inplace=True)
 
     variables = data[variables]
 
@@ -41,11 +48,12 @@ def correlation(filename, variables, removed_features):
     pd.set_option('display.max_colwidth', None)
     print(results_df.head(10))
 
+    close_to_1 = results_df[results_df['Correlation coefficient'].abs() > 0.99]
+
     product_correlation = correlation_matrix.abs().prod()
     variable_max_corr_product = product_correlation.idxmax()
-    print(f'\n🏆 Feature with highest product of absolute correlation coefficients: {variable_max_corr_product}\n')
 
-    return variable_max_corr_product, correlation_matrix
+    return variable_max_corr_product, close_to_1
 
 
 def main():
@@ -69,17 +77,31 @@ def main():
     removed_features = []
 
     while len(variables) > 1:
+        accuracy = train(file_path, removed_features)
+        print(f"\nMean accuracy across all houses: {accuracy:.4f}%.")
         variables = [var for var in variables if var not in removed_features]
         print(f'\n🟩 Current features ({len(variables)}): {variables}')
         print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
-        variable_max_corr_product, correlation_matrix = correlation(file_path, variables, removed_features)
-        print(f'\nVariable with highest product of absolute correlation coefficients: {variable_max_corr_product}')
-        answer = input('Do you want to discard this feature? (yes/no): ').lower()
-        if answer == 'yes':
-            removed_features.append(variable_max_corr_product)
-            variables.remove(variable_max_corr_product)
+        variable_max_corr_product, close_to_1 = correlation(file_path, variables, removed_features)
+        if not close_to_1.empty:
+            print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
+            answer = input(f"Do you want to discard some feature? {' / '.join(close_to_1[['Variable 1', 'Variable 2']].values.flatten())} (v1/v2/no): ").lower()
+            if answer == 'v1':
+                removed_features.append(close_to_1['Variable 1'].values[0])
+                variables.remove(close_to_1['Variable 1'].values[0])
+            elif answer == 'v2':
+                removed_features.append(close_to_1['Variable 2'].values[0])
+                variables.remove(close_to_1['Variable 2'].values[0])
+            else:
+                break
         else:
-            break
+            print(f'\n🏆 Feature with highest product of absolute correlation coefficients: {variable_max_corr_product}\n')
+            answer = input('Do you want to discard this feature? (yes/no): ').lower()
+            if answer == 'yes':
+                removed_features.append(variable_max_corr_product)
+                variables.remove(variable_max_corr_product)
+            else:
+                break
 
     print('\n🔆 FINAL RESULT')
     print(f'\n🟩 Current features ({len(variables)}): {variables}')

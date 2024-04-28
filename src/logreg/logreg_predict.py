@@ -48,7 +48,7 @@ def load_trained_parameters(PARAMS_FILE_PATH):
 
 def check_format(filename, col_names, col_types):
     try:
-        print('\n🔆 INIT CSV FILE')
+        print('\n🔆 READ CSV FILE')
         df = pd.read_csv(filename)
         print(f'\n🟢 File "{filename}" loaded successfully\n')
     except FileNotFoundError:

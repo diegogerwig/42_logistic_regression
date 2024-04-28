@@ -52,12 +52,12 @@ def save_parameters(thetas, PARAMS_FILE_PATH):
         exit(1)
 
 
-def train(filename):
+def train(filename, removed_features):
     '''
     Main function to train the logistic model.
     '''
     try:
-        print('\n🔆 INIT CSV FILE')
+        print('\n🔆 READ CSV FILE')
         df = pd.read_csv(filename)
         print(f'\n🟢 File "{filename}" loaded successfully\n')
         df.info()
@@ -95,6 +95,9 @@ def train(filename):
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
+
+    if len(removed_features) > 0:
+        columns_to_drop = removed_features
 
     print('\n🔆 REMOVE SOME CATEGORY FEATURES')
     df_num.drop(columns_to_drop, inplace=True, axis=1)
@@ -185,6 +188,8 @@ def train(filename):
 
     save_parameters(thetas, PARAMS_FILE_PATH)
 
+    return mean_accuracy
+
 
 def main():
     '''
@@ -208,7 +213,8 @@ def main():
         print('❌ Error: File not found')
         exit(1)
 
-    train(file_path)
+    removed_features = []
+    train(file_path, removed_features)
 
 
 if __name__ == "__main__":
