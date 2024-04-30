@@ -3,7 +3,6 @@ import os
 import pandas as pd
 import numpy as np
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from itertools import combinations
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'logreg')
@@ -18,9 +17,11 @@ def calculate_vif(X):
 
 def correlation(filename, variables, removed_features, check_correlation=True):
     try:
-        print('\n🔆 READ CSV FILE')
+        if check_correlation:
+            print('\n🔆 READ CSV FILE')
         data = pd.read_csv(filename)
-        print(f'\n🟢 File "{filename}" loaded successfully\n')
+        if check_correlation:
+            print(f'\n🟢 File "{filename}" loaded successfully\n')
     except FileNotFoundError:
         print('❌ Error: File not found')
         exit(1)
@@ -52,16 +53,12 @@ def correlation(filename, variables, removed_features, check_correlation=True):
         results_df['Abs_Correlation'] = results_df['Correlation coefficient'].abs()
         results_df = results_df.sort_values(by='Abs_Correlation', ascending=False).drop(columns=['Abs_Correlation'])
 
-        pd.set_option('display.max_rows', None)
-        pd.set_option('display.max_colwidth', None)
-        print(results_df.head(10))
-
         close_to_1 = results_df[results_df['Correlation coefficient'].abs() > 0.99]
-
-        product_correlation = correlation_matrix.abs().prod()
-        variable_max_corr_product = product_correlation.idxmax()
-
-        return variable_max_corr_product, close_to_1
+        if not close_to_1.empty:
+            pd.set_option('display.max_rows', None)
+            pd.set_option('display.max_colwidth', None)
+            print(results_df.head(10))
+        return close_to_1
     else:
         return calculate_vif(variables)
 
@@ -90,33 +87,6 @@ def main():
     sys.argv.append("--skip-input")
 
     while len(variables) > 1:
-        variable_max_corr_product, close_to_1 = correlation(file_path, variables, removed_features)
-        if not close_to_1.empty:
-            print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
-            answer = input(f"Do you want to discard some feature? {' / '.join(close_to_1[['Variable 1', 'Variable 2']].values.flatten())} (v1/v2/no): ").lower()
-            if answer == 'v1':
-                removed_features.append(close_to_1['Variable 1'].values[0])
-                variables.remove(close_to_1['Variable 1'].values[0])
-            elif answer == 'v2':
-                removed_features.append(close_to_1['Variable 2'].values[0])
-                variables.remove(close_to_1['Variable 2'].values[0])
-            else:
-                break
-        else:
-            print(f'\n🏆 Feature with highest product of absolute correlation coefficients: {variable_max_corr_product}\n')
-            answer = input('Do you want to discard this feature? (yes/no): ').lower()
-            if answer == 'yes':
-                removed_features.append(variable_max_corr_product)
-                variables.remove(variable_max_corr_product)
-            else:
-                vif_data = correlation(file_path, variables, removed_features, check_correlation=False)
-                vif_data = vif_data.sort_values(by='VIF', ascending=False)
-                print(f'\n📈 Variance Inflation Factor (VIF):')
-                print(vif_data)
-                variable_to_remove = vif_data.iloc[0]['feature']
-                removed_features.append(variable_to_remove)
-                variables.remove(variable_to_remove)
-
         accuracy = train(file_path, removed_features, [])
         accuracy_history.append(accuracy)
         variables = [var for var in variables if var not in removed_features]
@@ -126,6 +96,33 @@ def main():
         for i, acc in enumerate(accuracy_history):      
             removed_feature = removed_features[i - 1] if i > 0 else "None"
             print(f'   Iteration {i+1}: \t{acc:.4f}% -> Feature removed: {removed_feature}')
+        
+        close_to_1 = correlation(file_path, variables, removed_features)
+        if not close_to_1.empty:
+            print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
+            answer = input(f"Do you want to discard some feature? {' / '.join(close_to_1[['Variable 1', 'Variable 2']].values.flatten())} (f1/f2/no): ").lower()
+            if answer == 'f1':
+                removed_features.append(close_to_1['Variable 1'].values[0])
+                variables.remove(close_to_1['Variable 1'].values[0])
+            elif answer == 'f2':
+                removed_features.append(close_to_1['Variable 2'].values[0])
+                variables.remove(close_to_1['Variable 2'].values[0])
+            else:
+                break
+        else:
+            vif_data = correlation(file_path, variables, removed_features, check_correlation=False)
+            vif_data = vif_data.sort_values(by='VIF', ascending=False)
+            pd.options.display.float_format = '{:.5f}'.format
+            print(f'\n📈 Variance Inflation Factor (VIF):')
+            print(vif_data)
+            variable_to_remove = vif_data.iloc[0]['feature']
+            print(f'\n📈 Feature with highest VIF (Variance Inflation Factor): {variable_to_remove}\n')
+            answer = input('Do you want to discard this feature? (yes/no): ').lower()
+            if answer == 'yes':
+                removed_features.append(variable_to_remove)
+                variables.remove(variable_to_remove)
+            else:
+                break
 
     print(f'\n🔆 FINAL RESULT')
     print(f'\n🟩 Current features ({len(variables)}): {variables}')

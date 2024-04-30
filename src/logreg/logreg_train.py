@@ -20,7 +20,7 @@ PARAMS_FILE_PATH = 'data/params.csv'
 PLOTS_DIR = './plots'
 
 COLUMNS_TO_DROP = []
-# COLUMNS_TO_DROP = []
+# COLUMNS_TO_DROP = ['Defense Against the Dark Arts', 'Charms', 'Ancient Runes', 'Transfiguration', 'History of Magic']
 
 HOUSES = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
