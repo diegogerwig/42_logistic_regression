@@ -20,11 +20,7 @@ PARAMS_FILE_PATH = 'data/params.csv'
 PLOTS_DIR = './plots'
 
 COLUMNS_TO_DROP = []
-
-# columns_to_drop = []
-# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
-# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures']
-# columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures', 'Herbology', 'Potions', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
+# COLUMNS_TO_DROP = []
 
 HOUSES = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 

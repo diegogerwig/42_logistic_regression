@@ -75,13 +75,20 @@ def main():
                  'Arithmancy', 'Care of Magical Creatures', 'Herbology', 'Potions',
                  'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
     removed_features = []
+    accuracy_history = []
+
+    sys.argv.append("--skip-input")
 
     while len(variables) > 1:
-        accuracy = train(file_path, removed_features, True)
-        print(f"\nMean accuracy across all houses: {accuracy:.4f}%.")
+        accuracy = train(file_path, removed_features, [])
+        accuracy_history.append(accuracy)
         variables = [var for var in variables if var not in removed_features]
         print(f'\n🟩 Current features ({len(variables)}): {variables}')
         print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
+        print("\n📊 Accuracy History:")
+        for i, acc in enumerate(accuracy_history):      
+            removed_feature = removed_features[i - 1] if i > 0 else "None"
+            print(f'   Iteration {i+1}: \t{acc:.4f}% -> Feature removed: {removed_feature}')
         variable_max_corr_product, close_to_1 = correlation(file_path, variables, removed_features)
         if not close_to_1.empty:
             print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
@@ -106,6 +113,7 @@ def main():
     print('\n🔆 FINAL RESULT')
     print(f'\n🟩 Current features ({len(variables)}): {variables}')
     print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
+    print(f'\n⛳️ Accuracy across all houses: {accuracy:.4f}%')
 
 
 if __name__ == "__main__":
