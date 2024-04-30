@@ -1,22 +1,14 @@
 import sys
 import os
 import pandas as pd
-import numpy as np
-from statsmodels.stats.outliers_influence import variance_inflation_factor
-from itertools import combinations
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'logreg')
 sys.path.append(module_dir)
 from logreg_train import train
 
-def calculate_vif(X):
-    vif_data = pd.DataFrame()
-    vif_data["feature"] = X.columns
-    vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(len(X.columns))]
-    return vif_data
 
-def correlation(filename, variables, removed_features, check_correlation=True):
+def correlation(filename, variables, removed_features):
     try:
         print('\n🔆 READ CSV FILE')
         data = pd.read_csv(filename)
@@ -40,30 +32,28 @@ def correlation(filename, variables, removed_features, check_correlation=True):
 
     variables = variables.drop(columns=[var for var in removed_features if var in variables.columns])
 
-    if check_correlation:
-        correlation_matrix = variables.corr()
-        pairs = []
-        for i in range(len(correlation_matrix.columns)):
-            for j in range(i+1, len(correlation_matrix.columns)):
-                pairs.append((correlation_matrix.columns[i], correlation_matrix.columns[j], correlation_matrix.iloc[i, j]))
+    correlation_matrix = variables.corr()
 
-        results_df = pd.DataFrame(pairs, columns=['Variable 1', 'Variable 2', 'Correlation coefficient'])
+    pairs = []
+    for i in range(len(correlation_matrix.columns)):
+        for j in range(i+1, len(correlation_matrix.columns)):
+            pairs.append((correlation_matrix.columns[i], correlation_matrix.columns[j], correlation_matrix.iloc[i, j]))
 
-        results_df['Abs_Correlation'] = results_df['Correlation coefficient'].abs()
-        results_df = results_df.sort_values(by='Abs_Correlation', ascending=False).drop(columns=['Abs_Correlation'])
+    results_df = pd.DataFrame(pairs, columns=['Variable 1', 'Variable 2', 'Correlation coefficient'])
 
-        pd.set_option('display.max_rows', None)
-        pd.set_option('display.max_colwidth', None)
-        print(results_df.head(10))
+    results_df['Abs_Correlation'] = results_df['Correlation coefficient'].abs()
+    results_df = results_df.sort_values(by='Abs_Correlation', ascending=False).drop(columns=['Abs_Correlation'])
 
-        close_to_1 = results_df[results_df['Correlation coefficient'].abs() > 0.99]
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_colwidth', None)
+    print(results_df.head(10))
 
-        product_correlation = correlation_matrix.abs().prod()
-        variable_max_corr_product = product_correlation.idxmax()
+    close_to_1 = results_df[results_df['Correlation coefficient'].abs() > 0.99]
 
-        return variable_max_corr_product, close_to_1
-    else:
-        return calculate_vif(variables)
+    product_correlation = correlation_matrix.abs().prod()
+    variable_max_corr_product = product_correlation.idxmax()
+
+    return variable_max_corr_product, close_to_1
 
 
 def main():
@@ -90,6 +80,15 @@ def main():
     sys.argv.append("--skip-input")
 
     while len(variables) > 1:
+        accuracy = train(file_path, removed_features, [])
+        accuracy_history.append(accuracy)
+        variables = [var for var in variables if var not in removed_features]
+        print(f'\n🟩 Current features ({len(variables)}): {variables}')
+        print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
+        print("\n📊 Accuracy History:")
+        for i, acc in enumerate(accuracy_history):      
+            removed_feature = removed_features[i - 1] if i > 0 else "None"
+            print(f'   Iteration {i+1}: \t{acc:.4f}% -> Feature removed: {removed_feature}')
         variable_max_corr_product, close_to_1 = correlation(file_path, variables, removed_features)
         if not close_to_1.empty:
             print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
@@ -109,25 +108,9 @@ def main():
                 removed_features.append(variable_max_corr_product)
                 variables.remove(variable_max_corr_product)
             else:
-                vif_data = correlation(file_path, variables, removed_features, check_correlation=False)
-                vif_data = vif_data.sort_values(by='VIF', ascending=False)
-                print(f'\n📈 Variance Inflation Factor (VIF):')
-                print(vif_data)
-                variable_to_remove = vif_data.iloc[0]['feature']
-                removed_features.append(variable_to_remove)
-                variables.remove(variable_to_remove)
+                break
 
-        accuracy = train(file_path, removed_features, [])
-        accuracy_history.append(accuracy)
-        variables = [var for var in variables if var not in removed_features]
-        print(f'\n🟩 Current features ({len(variables)}): {variables}')
-        print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
-        print(f'\n📊 Accuracy History:')
-        for i, acc in enumerate(accuracy_history):      
-            removed_feature = removed_features[i - 1] if i > 0 else "None"
-            print(f'   Iteration {i+1}: \t{acc:.4f}% -> Feature removed: {removed_feature}')
-
-    print(f'\n🔆 FINAL RESULT')
+    print('\n🔆 FINAL RESULT')
     print(f'\n🟩 Current features ({len(variables)}): {variables}')
     print(f'\n🟥 Removed features ({len(removed_features)}): {removed_features}')
     print(f'\n⛳️ Accuracy across all houses: {accuracy:.4f}%')

@@ -6,13 +6,15 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/28 17:50:32 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/04/30 20:09:21 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 DATA_TRAIN_FILE_PATH = "./data/dataset_train.csv"
 DATA_TEST_FILE_PATH  = "./data/dataset_test.csv"
 DATA_CLEAN_FILE_PATH = "./data/dataset_train_clean.csv"
+
+
 
 all:
 
@@ -63,6 +65,9 @@ express: fclean
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH) --skip-input
 	@python3 src/test/evaluate.py --skip-input
 
+requirements:
+	@pip install -r requirements.txt
+
 clean:
 	
 fclean: clean
@@ -82,4 +87,4 @@ fclean: clean
 
 re:	fclean all
 	
-phony: all clean fclean re describe histogram scatter pair train predict evaluate
+phony: all clean fclean re describe histogram scatter pair train predict evaluate optimize express requirements
