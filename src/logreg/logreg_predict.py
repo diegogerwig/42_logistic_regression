@@ -8,11 +8,11 @@ import pandas as pd
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
-from logreg_train import columns_to_drop, houses, PARAMS_FILE_PATH, PLOTS_DIR
+from logreg_train import COLUMNS_TO_DROP, HOUSES, PARAMS_FILE_PATH, PLOTS_DIR
 from stats import percentile
 from normalize import normalize_xset
 from gradient import sigmoid
-from plotter import plot_feature_importance, plot_house_influence
+from plotter import plot_feature_importance
 
 HOUSES_FILE_PATH = 'data/houses.csv'
 
@@ -113,8 +113,8 @@ def predict(filename, thetas):
     custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 REMOVE SOME CATEGORY FEATURES')
-    df_num.drop(columns_to_drop, inplace=True, axis=1)
-    print(f'   COLUMNS DROPPED: {columns_to_drop}')
+    df_num.drop(COLUMNS_TO_DROP, inplace=True, axis=1)
+    print(f'   COLUMNS DROPPED: {COLUMNS_TO_DROP}')
     df_num.info()
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
@@ -153,7 +153,7 @@ def predict(filename, thetas):
     predicted_house_indices = np.argmax(stacked_predictions, axis=1)
     predicted_houses = []
     for idx in predicted_house_indices:
-        predicted_houses.append(houses[idx])
+        predicted_houses.append(HOUSES[idx])
 
     print('\nPredicted houses:')
     print(predicted_houses)
@@ -161,7 +161,7 @@ def predict(filename, thetas):
     print('\n🔆 PLOT FEATURE IMPORTANCE')
     skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
     if not skip_input:
-        plot_feature_importance(thetas, column_names, houses, PLOTS_DIR)
+        plot_feature_importance(thetas, column_names, HOUSES, PLOTS_DIR)
 
     return predicted_houses
 

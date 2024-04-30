@@ -19,12 +19,14 @@ LEARNING_RATE = 0.01
 PARAMS_FILE_PATH = 'data/params.csv'
 PLOTS_DIR = './plots'
 
-columns_to_drop = []
+COLUMNS_TO_DROP = []
+
+# columns_to_drop = []
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying']
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures']
 # columns_to_drop = ['Astronomy', 'History of Magic', 'Transfiguration', 'Charms', 'Flying', 'Arithmancy', 'Care of Magical Creatures', 'Herbology', 'Potions', 'Defense Against the Dark Arts', 'Divination', 'Muggle Studies', 'Ancient Runes']
 
-houses = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
+HOUSES = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
 
 def custom_input(prompt):
@@ -52,7 +54,7 @@ def save_parameters(thetas, PARAMS_FILE_PATH):
         exit(1)
 
 
-def train(filename, removed_features, skip_input=False):
+def train(filename, removed_features, skip_input):
     '''
     Main function to train the logistic model.
     '''
@@ -96,6 +98,8 @@ def train(filename, removed_features, skip_input=False):
     print(df_num)
     custom_input('\nPress ENTER to continue...\n')
 
+    columns_to_drop = COLUMNS_TO_DROP
+
     if len(removed_features) > 0:
         columns_to_drop = removed_features
 
@@ -138,10 +142,10 @@ def train(filename, removed_features, skip_input=False):
 
     print('\n🔆 CREATE LABEL SETS')
     y_trains = []
-    for house in houses:
+    for house in HOUSES:
         y_train_house = np.where(y == house, 1, 0)
         y_trains.append(y_train_house)
-    for i, house in enumerate(houses):
+    for i, house in enumerate(HOUSES):
         print(f"Labels for {house}: \t{y_trains[i][:20]}")
     custom_input('\nPress ENTER to continue...\n')
 
@@ -151,12 +155,12 @@ def train(filename, removed_features, skip_input=False):
         theta = np.zeros((nb_features + 1, 1))
         thetas.append(theta)
     for i, theta in enumerate(thetas):
-        print(f"   Parameters for house {houses[i]} (shape {theta.shape}): \n{theta}")
+        print(f"   Parameters for house {HOUSES[i]} (shape {theta.shape}): \n{theta}")
     custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 TRAINING')
     loss_histories = []
-    for i, house in enumerate(houses):
+    for i, house in enumerate(HOUSES):
         print(f"\n🟡 Training for house: {house}")
         # Add bias term to normalized features
         X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
@@ -168,11 +172,11 @@ def train(filename, removed_features, skip_input=False):
     print('\n🔆 PLOTTING LOSS HISTORY')
     skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
     if not skip_input:
-        plot_loss_history(houses, loss_histories, PLOTS_DIR)
+        plot_loss_history(HOUSES, loss_histories, PLOTS_DIR)
 
     print('\n🔆 CALCULATING ACCURACY')
     accuracies = []
-    for i, house in enumerate(houses):
+    for i, house in enumerate(HOUSES):
         # print(f"Evaluating accuracy for house: {house}")
         X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
         acc = accuracy(X, y_trains[i].reshape(-1, 1), thetas[i])
