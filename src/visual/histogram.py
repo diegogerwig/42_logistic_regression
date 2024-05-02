@@ -7,7 +7,6 @@ import seaborn as sns
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
-
 categories = ['Arithmancy', 'Astronomy', 'Herbology',
               'Defense Against the Dark Arts', 'Divination', 'Muggle Studies',
               'Ancient Runes', 'History of Magic', 'Transfiguration',

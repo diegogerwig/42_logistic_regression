@@ -1,7 +1,7 @@
 import sys
 import os
 import pandas as pd
-from stats import mean, std, percentile, mode, frequency
+from stats import mean, std, percentile, frequency
 
 
 def data_stats(feature):
@@ -87,14 +87,16 @@ def ft_describe(filename):
         exit(1)
 
     # Analyze numeric features of the DataFrame
-    stats = [data_stats(df[col]) for col in df.select_dtypes(include='number')]
+    stats = [data_stats(df[col]) for col
+             in df.select_dtypes(include='number')]
 
     display(stats)
 
     # Ask user if they want to replace null values with median
     # Prompt the user for input
     if df.isnull().values.any():
-        response = input('❗️ Do you want to replace null values with median? (yes/no): ').lower()
+        response = input('❗️ Do you want to replace null values ' +
+                         'with median? (yes/no): ').lower()
 
         if response == 'yes':
             # Replace null values with median
@@ -112,8 +114,10 @@ def ft_describe(filename):
             input('\nPress Enter to continue...\n')
 
             # Analyze numeric features of the DataFrame
-            stats = [data_stats(df[col]) for col in df if
-                    pd.api.types.is_numeric_dtype(df[col])]
+            stats = [data_stats(df[col]) for col
+                     in df.select_dtypes(include='number')]
+            # stats = [data_stats(df[col]) for col in df if
+            #          pd.api.types.is_numeric_dtype(df[col])]
             # Display statistics
             display(stats)
 
