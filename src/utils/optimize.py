@@ -3,11 +3,14 @@ import os
 import pandas as pd
 import numpy as np
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+import warnings
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'logreg')
 sys.path.append(module_dir)
 from logreg_train import train
+
+warnings.filterwarnings("ignore", message="divide by zero encountered in scalar divide")
 
 def calculate_vif(X):
     vif_data = pd.DataFrame()
