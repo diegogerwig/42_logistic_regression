@@ -215,6 +215,7 @@ def main():
 
     if "--skip-input" in sys.argv:
         skip_input = True
+
     train(file_path, removed_features, skip_input)
 
 
