@@ -58,6 +58,14 @@ def correlation(filename, variables, removed_features, check_correlation=True):
             pd.set_option('display.max_rows', None)
             pd.set_option('display.max_colwidth', None)
             print(results_df.head(10))
+
+            # Calculate VIF and print
+            vif_data = calculate_vif(variables)
+            vif_data = vif_data.sort_values(by='VIF', ascending=False)
+            pd.options.display.float_format = '{:.5f}'.format
+            print(f'\n📈 Variance Inflation Factor (VIF) for variables with high correlation:')
+            print(vif_data)
+            
         return close_to_1
     else:
         return calculate_vif(variables)
@@ -118,7 +126,7 @@ def main():
             variable_to_remove = vif_data.iloc[0]['feature']
             print(f'\n📈 Feature with highest VIF (Variance Inflation Factor): {variable_to_remove}\n')
             answer = input('Do you want to discard this feature? (yes/no): ').lower()
-            if answer == 'yes':
+            if answer == 'yes' or answer == 'y':
                 removed_features.append(variable_to_remove)
                 variables.remove(variable_to_remove)
             else:

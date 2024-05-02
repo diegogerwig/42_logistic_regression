@@ -156,10 +156,10 @@ def train(filename, removed_features, skip_input):
 
     print('\n🔆 TRAINING')
     loss_histories = []
+    # Add bias term to normalized features
+    X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
     for i, house in enumerate(HOUSES):
         print(f"\n🟡 Training for house: {house}")
-        # Add bias term to normalized features
-        X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
         thetas[i] = theta
         loss_histories.append(J_history)
@@ -173,8 +173,6 @@ def train(filename, removed_features, skip_input):
     print('\n🔆 CALCULATING ACCURACY')
     accuracies = []
     for i, house in enumerate(HOUSES):
-        # print(f"Evaluating accuracy for house: {house}")
-        X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
         acc = accuracy(X, y_trains[i].reshape(-1, 1), thetas[i])
         accuracies.append(acc)
         print(f"\nAccuracy for {house}: {acc * 100:.4f}%")
@@ -214,6 +212,7 @@ def main():
         exit(1)
 
     removed_features = []
+
     if "--skip-input" in sys.argv:
         skip_input = True
     train(file_path, removed_features, skip_input)
