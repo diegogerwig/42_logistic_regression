@@ -112,6 +112,7 @@ python3 optimize.py data/dataset_train.csv
 ## 📖 INFO
 + https://www.youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe
 + https://www.youtube.com/watch?v=YYEJ_GUguHw&t=13s
++ https://www.youtube.com/watch?v=C5268D9t9Ak
 + https://en.wikipedia.org/wiki/Logistic_regression
 + https://datamapu.com/posts/classical_ml/logistic_regression/
 + https://www.youngwonks.com/blog/What-is-sklearn-Logistic-Regression
