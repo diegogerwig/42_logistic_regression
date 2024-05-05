@@ -12,11 +12,13 @@ from logreg_train import train
 
 warnings.filterwarnings("ignore", message="divide by zero encountered in scalar divide")
 
+
 def calculate_vif(X):
     vif_data = pd.DataFrame()
     vif_data["feature"] = X.columns
     vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(len(X.columns))]
     return vif_data
+
 
 def correlation(filename, variables, removed_features, check_correlation=True):
     try:

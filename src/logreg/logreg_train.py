@@ -158,7 +158,7 @@ def train(filename, removed_features, skip_input):
     print('\n🔆 TRAINING')
     loss_history = []
     # Add bias term to normalized features
-    X = np.hstack((np.zeros((X_norm.shape[0], 1)), X_norm))
+    X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
     for i, house in enumerate(HOUSES):
         print(f"\n🟡 Training for house: {house}")
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
@@ -179,7 +179,7 @@ def train(filename, removed_features, skip_input):
         print(f"\nAccuracy for {house}: {acc * 100:.4f}%")
 
     mean_accuracy = np.mean(accuracies) * 100
-    if mean_accuracy >= 95:
+    if mean_accuracy >= 98:
         print(f"\n✅ Mean accuracy across all houses: {mean_accuracy:.4f}%.")
     else:
         print(f"\n❌ Mean accuracy across all houses: {mean_accuracy:.4f}%")
