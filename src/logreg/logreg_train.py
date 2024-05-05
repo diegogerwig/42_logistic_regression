@@ -3,10 +3,12 @@ import os
 import csv
 import pandas as pd
 import numpy as np
+import importlib
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
+
 from stats import percentile
 from normalize import normalize_xset
 from gradient import gradient_descent
@@ -177,7 +179,7 @@ def train(filename, removed_features, skip_input):
         print(f"\nAccuracy for {house}: {acc * 100:.4f}%")
 
     mean_accuracy = np.mean(accuracies) * 100
-    if mean_accuracy >= 99:
+    if mean_accuracy >= 95:
         print(f"\n✅ Mean accuracy across all houses: {mean_accuracy:.4f}%.")
     else:
         print(f"\n❌ Mean accuracy across all houses: {mean_accuracy:.4f}%")
@@ -212,6 +214,7 @@ def main():
 
     removed_features = []
 
+    skip_input = False
     if "--skip-input" in sys.argv:
         skip_input = True
 

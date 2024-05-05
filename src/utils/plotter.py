@@ -39,7 +39,8 @@ def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
         axes[i].grid(axis='x')
         for bar in bars:
             width = bar.get_width()
-            axes[i].text(width, bar.get_y() + bar.get_height()/2, '{:.2f}'.format(width),
+            axes[i].text(width, bar.get_y() + bar.get_height()/2,
+                         '{:.2f}'.format(width),
                          va='center', ha='left', fontsize=8)
     plt.tight_layout()
     plt.show(block=False)
