@@ -61,7 +61,7 @@ python3 evaluate.py data/dataset_test.csv
 
 ---
 
-#### Optimize features slection
+#### Optimize features drop selection
 ```sh
 python3 optimize.py data/dataset_train.csv
 ```
