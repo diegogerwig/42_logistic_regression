@@ -1,5 +1,8 @@
 # 📊 42_logistic_regression
 
+---
+---
+
 ## ⚙️ Usage
 
 #### Show dataset stats and metrics
@@ -64,6 +67,7 @@ python3 optimize.py data/dataset_train.csv
 ```
 
 ---
+---
 
 ## 🚀 TRAIN PROCESS
 1.  Parse dataset path.
@@ -82,6 +86,7 @@ python3 optimize.py data/dataset_train.csv
     *  Calculate the accuracy of the prediction.
     *  Plot the loss history.
 
+---
 ---
 
 ## 💡 PREDICT PROCESS
@@ -102,8 +107,11 @@ python3 optimize.py data/dataset_train.csv
     *  Plot relevance features.
 
 ---
+---
 
 ## 📖 INFO
 + https://www.youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe
 + https://www.youtube.com/watch?v=YYEJ_GUguHw&t=13s
 + https://en.wikipedia.org/wiki/Logistic_regression
++ https://datamapu.com/posts/classical_ml/logistic_regression/
++ https://www.youngwonks.com/blog/What-is-sklearn-Logistic-Regression

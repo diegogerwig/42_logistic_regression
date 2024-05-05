@@ -154,20 +154,20 @@ def train(filename, removed_features, skip_input):
     custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 TRAINING')
-    loss_histories = []
+    loss_history = []
     # Add bias term to normalized features
     X = np.hstack((np.zeros((X_norm.shape[0], 1)), X_norm))
     for i, house in enumerate(HOUSES):
         print(f"\n🟡 Training for house: {house}")
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
         thetas[i] = theta
-        loss_histories.append(J_history)
+        loss_history.append(J_history)
     custom_input('\nPress ENTER to continue...\n')
 
     print('\n🔆 PLOTTING LOSS HISTORY')
     skip_input = len(sys.argv) == 3 and sys.argv[2] == "--skip-input"
     if not skip_input:
-        plot_loss_history(HOUSES, loss_histories, PLOTS_DIR)
+        plot_loss_history(HOUSES, loss_history, PLOTS_DIR)
 
     print('\n🔆 CALCULATING ACCURACY')
     accuracies = []
