@@ -3,7 +3,8 @@ from tqdm import tqdm
 
 
 def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
+    sig = 1 / (1 + np.exp(-z))
+    return sig
 
 
 def gradient_descent(X, y, theta, lr, num_iters, threshold=1e-5):
