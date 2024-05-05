@@ -1,28 +1,71 @@
-# 42_logistic_regression
+# 📊 42_logistic_regression
 
-## Usage
+## ⚙️ Usage
 
-*Show dataset stats and metrics*
+#### Show dataset stats and metrics
 ```sh
 python3 describe.py data/dataset_train.csv
 ```
 
-*Draw histogram*
+---
+
+#### Draw histogram
 ```sh
 python3 histogram.py data/dataset_train.csv
 ```
 
-*Draw scatter plot*
+---
+
+#### Draw scatter plot
 ```sh
-python3 scatter_plot.py data/dataset_train⚙️.csv
+python3 scatter_plot.py data/dataset_train.csv
 ```
 
-*Draw pair plot*
+---
+
+#### Draw pair plot
 ```sh
 python3 pair_plot.py data/dataset_train.csv
 ```
 
-## 🚀 TRAIN PROCRESS
+---
+
+#### Train model
+```sh
+python3 logreg_train.py data/dataset_train.csv
+```
+> returns 'params.csv' file
+
+---
+
+#### Predict houses
+```sh
+python3 logreg_predic.py data/dataset_test.csv
+```
+> needs 'params.csv' file
+
+> returns 'houses.csv' file
+
+---
+
+#### Evaluate prediction
+```sh
+python3 evaluate.py data/dataset_test.csv
+```
+> needs 'houses.csv' file
+
+> needs 'dataset_truth.csv' file
+
+---
+
+#### Optimize features slection
+```sh
+python3 optimize.py data/dataset_train.csv
+```
+
+---
+
+## 🚀 TRAIN PROCESS
 1.  Parse dataset path.
 2.  Read dataset from CSV file (📝 dataset_train.csv).
 3.  Get numeric features from dataset (by making a copy of the original dataset).
@@ -39,8 +82,9 @@ python3 pair_plot.py data/dataset_train.csv
     *  Calculate the accuracy of the prediction.
     *  Plot the loss history.
 
+---
 
-## 💡 PREDICT PROCRESS
+## 💡 PREDICT PROCESS
 1.  Parse dataset path.
 2.  Load 'thetas' from CSV file (📝 params.csv).
 3.  Check format info in CSV file (📝 dataset_test.csv).
@@ -57,7 +101,9 @@ python3 pair_plot.py data/dataset_train.csv
     *  Evaluate the predicted data with real data.
     *  Plot relevance features.
 
+---
 
-## INFO
+## 📖 INFO
 + https://www.youtube.com/playlist?list=PLblh5JKOoLUKxzEP5HA2d-Li7IJkHfXSe
 + https://www.youtube.com/watch?v=YYEJ_GUguHw&t=13s
++ https://en.wikipedia.org/wiki/Logistic_regression

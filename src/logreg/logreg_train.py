@@ -156,7 +156,7 @@ def train(filename, removed_features, skip_input):
     print('\n🔆 TRAINING')
     loss_histories = []
     # Add bias term to normalized features
-    X = np.hstack((np.ones((X_norm.shape[0], 1)), X_norm))
+    X = np.hstack((np.zeros((X_norm.shape[0], 1)), X_norm))
     for i, house in enumerate(HOUSES):
         print(f"\n🟡 Training for house: {house}")
         theta, J_history = gradient_descent(X, y_trains[i].reshape(-1, 1), thetas[i], LEARNING_RATE, MAX_ITERATIONS)
