@@ -6,7 +6,7 @@
 #    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/06 22:09:25 by marvin           ###   ########.fr        #
+#    Updated: 2024/05/06 22:09:39 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ requirements:
 	@pip install -r requirements.txt
 
 clean:
-	
+
 fclean: clean
 	@echo "\n🟡 Cleaning up...\n"
 	@find . -type d -name '__pycache__' -exec rm -rf {} +
