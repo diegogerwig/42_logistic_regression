@@ -6,7 +6,7 @@
 #    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/06 22:02:36 by marvin           ###   ########.fr        #
+#    Updated: 2024/05/06 22:09:25 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,5 +84,5 @@ fclean: clean
 	@rm -rf ./plots
 
 re:	fclean all
-	
+
 phony: all clean fclean re describe histogram scatter pair train predict evaluate optimize express requirements
