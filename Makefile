@@ -3,18 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/04/30 20:09:21 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/06 22:02:36 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 DATA_TRAIN_FILE_PATH = "./data/dataset_train.csv"
 DATA_TEST_FILE_PATH  = "./data/dataset_test.csv"
 DATA_CLEAN_FILE_PATH = "./data/dataset_train_clean.csv"
-
-
 
 all:
 
