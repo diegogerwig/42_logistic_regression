@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/06 22:09:39 by marvin           ###   ########.fr        #
+#    Updated: 2024/05/09 20:55:18 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ express: fclean
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH) --skip-input
 	@python3 src/test/evaluate.py --skip-input
 
-requirements:
+req:
 	@pip install -r requirements.txt
 
 clean:
