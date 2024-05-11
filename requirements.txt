@@ -4,4 +4,3 @@ matplotlib
 seaborn
 statsmodels
 tqdm
-scipy
