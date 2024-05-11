@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/11 13:44:14 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/11 14:11:16 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,7 @@ req:
 clean:
 
 fclean: clean
-	@echo "\n🟡 Cleaning up...\n"
+	@echo "🟡 Cleaning up..."
 	@find . -type d -name '__pycache__' -exec rm -rf {} +
 	@rm -rf ./data/*_clean.csv
 	@rm -rf ./data/params.csv
