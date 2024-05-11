@@ -3,7 +3,6 @@ import os
 import csv
 import pandas as pd
 import numpy as np
-import importlib
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')

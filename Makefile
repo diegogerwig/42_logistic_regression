@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/11 14:11:16 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/11 17:17:49 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ all:
 plot: fclean describe histogram scatter pair
 
 describe:
-	@echo "\n\033[31mDATA ANALYSIS\033[0m"
-	@echo "\n\033[31mDescribing data...\033[0m"
+	@echo "\033[31mDATA ANALYSIS\033[0m"
+	@echo "\033[31mDescribing data...\033[0m"
 	@python3 src/utils/describe.py $(DATA_TRAIN_FILE_PATH)
 
 histogram:
@@ -39,8 +39,8 @@ pair:
 	@python3 src/visual/pair_plot.py $(DATA_TRAIN_FILE_PATH)
 
 train:
-	@echo "\n\033[31mLOGISTIC REGRESSION\033[0m"
-	@echo "\n\033[31mTraining...\033[0m"
+	@echo -e "\n\033[31mLOGISTIC REGRESSION\033[0m"
+	@echo -e "\n\033[31mTraining...\033[0m"
 	@python3 src/logreg/logreg_train.py $(DATA_TRAIN_FILE_PATH)
 
 predict:
