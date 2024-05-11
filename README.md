@@ -1,7 +1,7 @@
-# 📊 42_logistic_regression
+# ⚡ 42_logistic_regression
 
 ---
----
+--- 
 
 ## ⚙️ Usage
 
@@ -105,6 +105,28 @@ python3 optimize.py data/dataset_train.csv
 *   🏁 After the predict:
     *  Evaluate the predicted data with real data.
     *  Plot relevance features.
+
+---
+---
+
+## 📊 PLOT EXAMPLES
++ HISTOGRAM
+![HISTROGRAM](plots_examples/histogram_with_kde.png)
+
++ SCATTER
+![HISTROGRAM](plots_examples/scatter_plot.png)
+
++ PAIR PLOT
+![HISTROGRAM](plots_examples/pair_plot.png)
+
++ CORRELATION
+![HISTROGRAM](plots_examples/correlation_matrix.png)
+
++ LOSS HISTORY
+![HISTROGRAM](plots_examples/plot_loss_history.png)
+
++ FEATURE IMPORTANCE
+![HISTROGRAM](plots_examples/plot_feature_importance.png)
 
 ---
 ---
