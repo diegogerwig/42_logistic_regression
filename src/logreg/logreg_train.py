@@ -4,7 +4,6 @@ import csv
 import pandas as pd
 import numpy as np
 
-
 current_dir = os.path.dirname(os.path.abspath(__file__))
 module_dir = os.path.join(os.path.dirname(current_dir), 'utils')
 sys.path.append(module_dir)
