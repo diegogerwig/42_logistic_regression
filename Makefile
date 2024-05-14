@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/12 17:18:46 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/14 20:24:19 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,7 @@ fclean: clean
 	@if [ ! -d './plots_examples' ]; then \
 		mkdir -p ./plots_examples; \
 	fi
-	@if [ -d './plots' ]; then \
+	@if [ -d './plots' ] && [ "$(ls -A ./plots)" ]; then \
 		cp -r ./plots/* ./plots_examples/; \
 	fi
 	@rm -rf ./plots
