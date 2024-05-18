@@ -16,7 +16,7 @@ def plot_loss_history(houses, loss_histories, PLOTS_DIR):
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
-    plt.show(block=False)
+    # plt.show(block=False)
     os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'plot_loss_history.png')
     plt.savefig(save_path)
@@ -43,7 +43,7 @@ def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
                          '{:.2f}'.format(width),
                          va='center', ha='left', fontsize=8)
     plt.tight_layout()
-    plt.show(block=False)
+    # plt.show(block=False)
     os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'plot_feature_importance.png')
     plt.savefig(save_path)

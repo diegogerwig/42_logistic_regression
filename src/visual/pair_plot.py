@@ -48,7 +48,7 @@ def pair_plot(filename):
                  diag_kws={'alpha': 0.5, 'bins': 20, 'kde': True},
                  height=0.95, aspect=1.5)
 
-    plt.show(block=False)
+    # plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
     plt.savefig(save_path)

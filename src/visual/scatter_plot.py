@@ -97,7 +97,7 @@ def scatter_plot(filename):
                ncol=len(houses), fontsize=7)
 
     # Show plot
-    plt.show(block=False)
+    # plt.show(block=False)
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'scatter_plot.png')

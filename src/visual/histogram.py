@@ -81,7 +81,7 @@ def histogram(filename):
     plt.tight_layout()
 
     # Show plot
-    plt.show(block=False)
+    # plt.show(block=False)
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'histogram_with_kde.png')
