@@ -69,7 +69,7 @@ def pair_plot(filename):
     plt.xticks(range(len(corr_matrix)), corr_matrix.columns, rotation=90)
     plt.yticks(range(len(corr_matrix)), corr_matrix.columns)
     plt.tight_layout()
-    plt.show(block=False)
+    # plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'correlation_matrix.png')
     plt.savefig(save_path, dpi=300)

@@ -113,11 +113,11 @@ def main():
         close_to_1 = correlation(file_path, variables, removed_features)
         if not close_to_1.empty:
             print(f"\n❗️ Warning: Variables with correlation coefficients close to 1 or -1: {close_to_1[['Variable 1', 'Variable 2']].values.tolist()}\n")
-            answer = input(f"Do you want to discard some feature? {' / '.join(close_to_1[['Variable 1', 'Variable 2']].values.flatten())} (f1/f2/no): ").lower()
-            if answer == 'f1':
+            answer = input(f"Do you want to discard some feature? {' / '.join(close_to_1[['Variable 1', 'Variable 2']].values.flatten())} (ast/def/no): ").lower()
+            if answer == 'ast':
                 removed_features.append(close_to_1['Variable 1'].values[0])
                 variables.remove(close_to_1['Variable 1'].values[0])
-            elif answer == 'f2':
+            elif answer == 'def':
                 removed_features.append(close_to_1['Variable 2'].values[0])
                 variables.remove(close_to_1['Variable 2'].values[0])
             else:
