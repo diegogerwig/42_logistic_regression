@@ -3,8 +3,6 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import warnings
-warnings.filterwarnings("ignore", message="Unable to import Axes3D")
 
 
 PLOTS_DIR = './plots'
@@ -68,7 +66,7 @@ def histogram(filename):
                              ax=ax, kde=True)
 
     # Set title for the entire plot
-    plt.suptitle('Histogram with KDE', fontsize=20)
+    # plt.suptitle('Histogram with KDE', fontsize=20)
     
     # Get legend for the first subplot
     handles, labels = axes[0, 0].get_legend_handles_labels()
