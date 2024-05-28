@@ -7,8 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
-
-warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", message=".*Unable to import Axes3D.*")
+    # import matplotlib.pyplot as plt
 
 
 PLOTS_DIR = './plots'
