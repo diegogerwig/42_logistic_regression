@@ -1,15 +1,10 @@
-# import matplotlib
-# matplotlib.use('Agg')
-
 import sys
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
-with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", message=".*Unable to import Axes3D.*")
-    # import matplotlib.pyplot as plt
+warnings.filterwarnings("ignore", message="Unable to import Axes3D")
 
 
 PLOTS_DIR = './plots'
@@ -55,7 +50,7 @@ def histogram(filename):
     num_rows = (num_categories_with_data - 1) // num_cols + 1
 
     # Create plot grid
-    fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(20, 12))
+    fig, axes = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, 9))
 
     # Adjust spacing between subplots
     plt.subplots_adjust(left=0.05, right=0.98, top=0.93,
@@ -72,6 +67,9 @@ def histogram(filename):
                              color=color, alpha=0.5, bins=20, label=house,
                              ax=ax, kde=True)
 
+    # Set title for the entire plot
+    plt.suptitle('Histogram with KDE', fontsize=20)
+    
     # Get legend for the first subplot
     handles, labels = axes[0, 0].get_legend_handles_labels()
 
@@ -86,7 +84,7 @@ def histogram(filename):
     plt.tight_layout()
 
     # Show plot
-    plt.show(block=False)
+    plt.show()
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'histogram_with_kde.png')

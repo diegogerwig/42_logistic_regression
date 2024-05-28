@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/28 19:34:18 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/28 20:08:42 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,8 +64,8 @@ express: fclean
 	@python3 src/test/evaluate.py --skip-input
 
 req:
-	@pip install -r requirements.txt
-	@pip install --upgrade pandas matplotlib seaborn
+	@pip3 install -r requirements.txt
+	@pip3 install --upgrade pandas matplotlib seaborn
 
 clean:
 

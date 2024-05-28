@@ -1,13 +1,8 @@
-# import matplotlib
-# matplotlib.use('Agg')
-
 import sys
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-import warnings
 
-warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -45,7 +40,7 @@ def scatter_plot(filename):
 
     # Create plot grid
     _, axes = plt.subplots(nrows=len(categories), ncols=len(categories),
-                           figsize=(20, 12))
+                           figsize=(15, 9))
 
     # Adjust spacing between subplots
     plt.subplots_adjust(left=0.05, right=0.98, top=0.93, bottom=0.05,
@@ -100,7 +95,7 @@ def scatter_plot(filename):
                ncol=len(houses), fontsize=7)
 
     # Show plot
-    plt.show(block=False)
+    plt.show()
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'scatter_plot.png')
