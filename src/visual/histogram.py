@@ -6,6 +6,10 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
+
 
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -81,7 +85,7 @@ def histogram(filename):
     plt.tight_layout()
 
     # Show plot
-    # plt.show(block=False)
+    plt.show(block=False)
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'histogram_with_kde.png')

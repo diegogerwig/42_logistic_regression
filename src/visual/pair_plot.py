@@ -1,11 +1,14 @@
-import matplotlib
-matplotlib.use('Agg')
+# import matplotlib
+# matplotlib.use('Agg')
 
 import sys
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -47,8 +50,7 @@ def pair_plot(filename):
                  plot_kws={"s": 4},
                  diag_kws={'alpha': 0.5, 'bins': 20, 'kde': True},
                  height=0.95, aspect=1.5)
-
-    # plt.show(block=False)
+    plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
     plt.savefig(save_path)
@@ -69,7 +71,7 @@ def pair_plot(filename):
     plt.xticks(range(len(corr_matrix)), corr_matrix.columns, rotation=90)
     plt.yticks(range(len(corr_matrix)), corr_matrix.columns)
     plt.tight_layout()
-    # plt.show(block=False)
+    plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'correlation_matrix.png')
     plt.savefig(save_path, dpi=300)

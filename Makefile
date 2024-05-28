@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/14 20:24:19 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/28 19:34:18 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ express: fclean
 
 req:
 	@pip install -r requirements.txt
+	@pip install --upgrade pandas matplotlib seaborn
 
 clean:
 
