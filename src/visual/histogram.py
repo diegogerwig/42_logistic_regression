@@ -6,6 +6,7 @@ warnings.filterwarnings("ignore", category=UserWarning, message="Unable to impor
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
@@ -17,6 +18,7 @@ categories = ['Arithmancy', 'Astronomy', 'Herbology',
 houses = ['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff']
 
 colors = ['blue', 'orange', 'green', 'red']
+
 
 def histogram(filename):
     '''
@@ -66,7 +68,7 @@ def histogram(filename):
                              ax=ax, kde=True)
 
     # Set title for the entire plot
-    # plt.suptitle('Histogram with KDE', fontsize=20)
+    plt.suptitle('Histogram with KDE', fontsize=20)
     
     # Get legend for the first subplot
     handles, labels = axes[0, 0].get_legend_handles_labels()
@@ -82,7 +84,7 @@ def histogram(filename):
     plt.tight_layout()
 
     # Show plot
-    plt.show()
+    plt.show(block=False)
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'histogram_with_kde.png')
@@ -90,6 +92,7 @@ def histogram(filename):
     print('\n⚪️ Plot saved as: {}\n'.format(save_path))
     input('\nPress Enter to continue...\n')
     plt.close()
+
 
 def main():
     '''

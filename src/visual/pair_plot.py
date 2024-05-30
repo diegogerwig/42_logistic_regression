@@ -1,6 +1,8 @@
 import sys
 import os
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -38,15 +40,14 @@ def pair_plot(filename):
     # Select features
     df = df[categories]
 
-    plt.figure(figsize=(15, 9))
     # Set the font size of axis labels
     sns.set_context("paper", font_scale=0.6)
-
+    plt.suptitle('Pair Plot', fontsize=20, y=0.96)
     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
                  plot_kws={"s": 4},
                  diag_kws={'alpha': 0.5, 'bins': 20, 'kde': True},
-                 height=0.95, aspect=1.5)
-    plt.show()
+                 height=0.90, aspect=1.5)
+    plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
     plt.savefig(save_path)
@@ -59,6 +60,7 @@ def pair_plot(filename):
     plt.figure(figsize=(15, 9))
     plt.imshow(corr_matrix, cmap='coolwarm', interpolation='nearest')
     plt.colorbar()
+    plt.suptitle('Correlation Matrix PLOT', fontsize=20, y=0.96)
     plt.title('Correlation Matrix')
     for i in range(len(corr_matrix)):
         for j in range(len(corr_matrix)):
@@ -67,7 +69,7 @@ def pair_plot(filename):
     plt.xticks(range(len(corr_matrix)), corr_matrix.columns, rotation=90)
     plt.yticks(range(len(corr_matrix)), corr_matrix.columns)
     plt.tight_layout()
-    plt.show()
+    plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'correlation_matrix.png')
     plt.savefig(save_path, dpi=300)

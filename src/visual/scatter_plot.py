@@ -1,6 +1,8 @@
 import sys
 import os
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 import matplotlib.pyplot as plt
 
 
@@ -43,7 +45,7 @@ def scatter_plot(filename):
                            figsize=(15, 9))
 
     # Adjust spacing between subplots
-    plt.subplots_adjust(left=0.05, right=0.98, top=0.93, bottom=0.05,
+    plt.subplots_adjust(left=0.05, right=0.98, top=0.90, bottom=0.05, # Cambiado de top=0.93
                         hspace=0.1, wspace=0.1)
 
     # Turn grid into array
@@ -85,6 +87,9 @@ def scatter_plot(filename):
             ax.tick_params(left=False, right=False, labelleft=False,
                            labelbottom=False, bottom=False)
 
+    # Set title for the entire plot
+    plt.suptitle('Scatter Plot', fontsize=20, y=0.96)
+
     # Add legend
     legend_handles = [plt.Line2D([0], [0], marker='o', color='w',
                                  markersize=5, markerfacecolor=color,
@@ -95,7 +100,7 @@ def scatter_plot(filename):
                ncol=len(houses), fontsize=7)
 
     # Show plot
-    plt.show()
+    plt.show(block=False)
 
     # Save plot
     save_path = os.path.join(PLOTS_DIR, 'scatter_plot.png')
