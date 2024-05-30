@@ -1,9 +1,10 @@
 import sys
 import os
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 
 PLOTS_DIR = './plots'
 os.makedirs(PLOTS_DIR, exist_ok=True)
@@ -16,7 +17,6 @@ categories = ['Arithmancy', 'Astronomy', 'Herbology',
 houses = ['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff']
 
 colors = ['blue', 'orange', 'green', 'red']
-
 
 def histogram(filename):
     '''
@@ -91,7 +91,6 @@ def histogram(filename):
     input('\nPress Enter to continue...\n')
     plt.close()
 
-
 def main():
     '''
     Main function of the program.
@@ -112,7 +111,6 @@ def main():
 
     # Plot the histogram
     histogram(file_path)
-
 
 if __name__ == '__main__':
     main()
