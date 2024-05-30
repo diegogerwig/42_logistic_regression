@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/28 20:08:42 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/05/30 20:38:31 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,6 @@ express: fclean
 
 req:
 	@pip3 install -r requirements.txt
-	@pip3 install --upgrade pandas matplotlib seaborn
 
 clean:
 
@@ -76,13 +75,11 @@ fclean: clean
 	@rm -rf ./data/params.csv
 	@rm -rf ./data/houses.csv
 	@rm -rf ./data/df_num.csv
-	@if [ ! -d './plots_examples' ]; then \
+	@if [ -d './plots' ]; then \
 		mkdir -p ./plots_examples; \
-	fi
-	@if [ -d './plots' ] && [ "$(ls -A ./plots)" ]; then \
 		cp -r ./plots/* ./plots_examples/; \
+		rm -rf ./plots; \
 	fi
-	@rm -rf ./plots
 
 re:	fclean all
 
