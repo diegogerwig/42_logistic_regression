@@ -1,10 +1,12 @@
 import os
 import numpy as np
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, message="Unable to import Axes3D")
 import matplotlib.pyplot as plt
 
 
 def plot_loss_history(houses, loss_histories, PLOTS_DIR):
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(12, 9))
     line_styles = ['-']
     for i, house in enumerate(houses):
         house_loss_history = np.array(loss_histories[i])
@@ -16,7 +18,7 @@ def plot_loss_history(houses, loss_histories, PLOTS_DIR):
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
-    # plt.show(block=False)
+    plt.show(block=False)
     os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'plot_loss_history.png')
     plt.savefig(save_path)
@@ -28,7 +30,7 @@ def plot_loss_history(houses, loss_histories, PLOTS_DIR):
 def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
     num_houses = len(thetas)
     num_features = len(column_names)
-    fig, axes = plt.subplots(num_houses, 1, figsize=(15, 12), sharex=True)
+    fig, axes = plt.subplots(num_houses, 1, figsize=(12, 9), sharex=True)
     for i, theta in enumerate(thetas):
         feature_importance = abs(theta[1:])
         bars = axes[i].barh(column_names, feature_importance)
@@ -43,7 +45,7 @@ def plot_feature_importance(thetas, column_names, houses, PLOTS_DIR):
                          '{:.2f}'.format(width),
                          va='center', ha='left', fontsize=8)
     plt.tight_layout()
-    # plt.show(block=False)
+    plt.show(block=False)
     os.makedirs(PLOTS_DIR, exist_ok=True)
     save_path = os.path.join(PLOTS_DIR, 'plot_feature_importance.png')
     plt.savefig(save_path)

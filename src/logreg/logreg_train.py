@@ -1,6 +1,3 @@
-import matplotlib
-matplotlib.use('Agg')
-
 import sys
 import os
 import csv
