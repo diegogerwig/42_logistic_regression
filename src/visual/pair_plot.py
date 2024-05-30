@@ -42,11 +42,11 @@ def pair_plot(filename):
 
     # Set the font size of axis labels
     sns.set_context("paper", font_scale=0.6)
-    plt.suptitle('Pair Plot', fontsize=20, y=0.96)
     sns.pairplot(df, hue='Hogwarts House', kind='scatter', diag_kind='hist',
                  plot_kws={"s": 4},
                  diag_kws={'alpha': 0.5, 'bins': 20, 'kde': True},
                  height=0.90, aspect=1.5)
+    plt.title('Pair Plot',fontsize=20)
     plt.show(block=False)
 
     save_path = os.path.join(PLOTS_DIR, 'pair_plot.png')
@@ -60,8 +60,7 @@ def pair_plot(filename):
     plt.figure(figsize=(15, 9))
     plt.imshow(corr_matrix, cmap='coolwarm', interpolation='nearest')
     plt.colorbar()
-    plt.suptitle('Correlation Matrix PLOT', fontsize=20, y=0.96)
-    plt.title('Correlation Matrix')
+    plt.title('Correlation Matrix',fontsize=20)
     for i in range(len(corr_matrix)):
         for j in range(len(corr_matrix)):
             plt.text(j, i, "{:.4f}".format(corr_matrix.iloc[i, j]),

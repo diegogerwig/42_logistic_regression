@@ -68,7 +68,7 @@ def histogram(filename):
                              ax=ax, kde=True)
 
     # Set title for the entire plot
-    plt.suptitle('Histogram with KDE', fontsize=20)
+    plt.suptitle('Histogram with KDE (Kernel Density Estimation)', fontsize=20)
     
     # Get legend for the first subplot
     handles, labels = axes[0, 0].get_legend_handles_labels()

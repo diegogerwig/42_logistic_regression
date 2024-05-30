@@ -88,7 +88,7 @@ def scatter_plot(filename):
                            labelbottom=False, bottom=False)
 
     # Set title for the entire plot
-    plt.suptitle('Scatter Plot', fontsize=20, y=0.96)
+    plt.suptitle('Scatter Plot', fontsize=20, y=0.975)
 
     # Add legend
     legend_handles = [plt.Line2D([0], [0], marker='o', color='w',
