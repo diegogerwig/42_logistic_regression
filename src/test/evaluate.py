@@ -45,7 +45,5 @@ if __name__ == '__main__':
     print("Your score on test set: {:.4f}".format(score))
     if score >= .98:
         print("✅ SUCCESS! You passed the test!")
-        exit
     else:
         print("❌ FAILURE! Your score is too low.")
-        exit

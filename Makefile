@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/06/01 17:25:52 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/06/01 18:27:03 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,7 @@ pair:
 	@python3 src/visual/pair_plot.py $(DATA_TRAIN_FILE_PATH)
 
 
-test: fclean train predict
+test: fclean train predict evaluate
 
 train:
 	@echo -e '\n\033[31mLOGISTIC REGRESSION\033[0m'
@@ -52,10 +52,10 @@ predict:
 	@echo -e '\n\033[31mPredicting...\033[0m'
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH)
 
-
-evaluate: fclean train predict test
+evaluate:
 	@echo -e '\n\033[31mLOGISTIC REGRESSION\033[0m'
 	@echo -e '\n\033[31mEvaluating...\033[0m'
+	@python3 src/test/evaluate.py
 
 
 optimize: fclean

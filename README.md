@@ -53,7 +53,7 @@ python3 logreg_predic.py data/dataset_test.csv
 
 #### Evaluate prediction
 ```sh
-python3 evaluate.py data/dataset_test.csv
+python3 evaluate.py
 ```
 > needs 'houses.csv' file
 
