@@ -19,3 +19,4 @@ def gradient_descent(X, y, theta, lr, num_iters, threshold=1e-5):
         if len(J_history) > 1 and abs(J_history[-1] - J_history[-2]) < threshold: # Convergence check with threshold
             break
     return theta, J_history
+
