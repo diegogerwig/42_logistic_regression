@@ -69,6 +69,12 @@ python3 optimize.py data/dataset_train.csv
 ---
 ---
 
+## 💥 LINEAR vs LOGISTIC
+[![./doc/explanation%20linear%20vs%20logistic.md](./doc/logistic_reg_VS_linear_reg.png)](./doc/explanation%20linear%20vs%20logistic.md)
+
+---
+---
+
 ## 🚀 TRAIN PROCESS
 1.  Parse dataset path.
 2.  Read dataset from CSV file (📝 dataset_train.csv).
