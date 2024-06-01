@@ -98,7 +98,7 @@ def ft_describe(filename):
         response = input('❗️ Do you want to replace null values ' +
                          'with median? (yes/no): ').lower()
 
-        if response == 'yes':
+        if response == 'yes' or response == 'y' or response == 'YES' or response == 'Y':
             # Replace null values with median
             for column in df.columns:
                 if df[column].dtype != 'object':

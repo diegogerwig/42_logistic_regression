@@ -18,10 +18,10 @@ def std(data, mean):
 
     The standard deviation is a statistical measure indicating the dispersion
       or variability of a dataset relative to its mean. In other words, it
-      represents how much individual values deviate from the mean. A high
-      standard deviation indicates that the data points are spread out widely
-      around the mean, while a low standard deviation indicates that the data
-      points are clustered closer to the mean.
+      represents how much individual values deviate from the mean. 
+      A high standard deviation indicates that the data points are spread out 
+      widely around the mean, while a low standard deviation indicates that 
+      the data points are clustered closer to the mean.
     '''
     sum_values = 0
     for i in range(data.size):
@@ -45,7 +45,7 @@ def percentile(data, percentile):
         percentile = data.iloc[int(i)]
         return percentile
     else:
-        percentile = data.iloc[math.floor(i)] * (1 - i % 1) +\
+        percentile = data.iloc[math.floor(i)] * (1 - (i % 1)) +\
               data.iloc[math.ceil(i)] * (i % 1)
         return percentile
 
@@ -92,13 +92,3 @@ def mode(data):
             max_frequency = frequency
 
     return mode
-
-
-def top(column):
-    """
-    Calculate the most common value in a column of a DataFrame.
-    """
-    value_counts = column.value_counts()
-    top_value = value_counts.idxmax()
-
-    return top_value

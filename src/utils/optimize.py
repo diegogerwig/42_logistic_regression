@@ -14,6 +14,12 @@ warnings.filterwarnings("ignore", message="divide by zero encountered in scalar 
 
 
 def calculate_vif(X):
+    '''
+    Calculate the Variance Inflation Factor (VIF) for each feature in a given DataFrame.
+    
+    VIF is a measure used to detect the presence of multicollinearity in a set of multiple regression variables. 
+    It quantifies how much the variance of a regression coefficient is inflated due to multicollinearity with other features.
+    '''
     vif_data = pd.DataFrame()
     vif_data["feature"] = X.columns
     vif_data["VIF"] = [variance_inflation_factor(X.values, i) for i in range(len(X.columns))]

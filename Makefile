@@ -6,7 +6,7 @@
 #    By: dgerwig- <dgerwig-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/06 14:07:52 by dgerwig-          #+#    #+#              #
-#    Updated: 2024/05/30 20:38:31 by dgerwig-         ###   ########.fr        #
+#    Updated: 2024/06/01 17:25:52 by dgerwig-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ DATA_TEST_FILE_PATH  = './data/dataset_test.csv'
 DATA_CLEAN_FILE_PATH = './data/dataset_train_clean.csv'
 
 all:
+
 
 plot: fclean describe histogram scatter pair
 
@@ -38,6 +39,9 @@ pair:
 	@echo -e '\n\033[31mGenerating pair plot...\033[0m'
 	@python3 src/visual/pair_plot.py $(DATA_TRAIN_FILE_PATH)
 
+
+test: fclean train predict
+
 train:
 	@echo -e '\n\033[31mLOGISTIC REGRESSION\033[0m'
 	@echo -e '\n\033[31mTraining...\033[0m'
@@ -48,23 +52,27 @@ predict:
 	@echo -e '\n\033[31mPredicting...\033[0m'
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH)
 
-evaluate: fclean train predict
+
+evaluate: fclean train predict test
 	@echo -e '\n\033[31mLOGISTIC REGRESSION\033[0m'
 	@echo -e '\n\033[31mEvaluating...\033[0m'
-	@python3 src/test/evaluate.py
+
 
 optimize: fclean
-	@echo -e'\n\033[31mOPTIMIZE SELECTED FEATURES\033[0m'
+	@echo -e '\n\033[31mOPTIMIZE SELECTED FEATURES\033[0m'
 	@echo -e '\n\033[31mOptimizing...\033[0m'
 	@python3 src/utils/optimize.py $(DATA_TRAIN_FILE_PATH)
+
 
 express: fclean
 	@python3 src/logreg/logreg_train.py $(DATA_TRAIN_FILE_PATH) --skip-input
 	@python3 src/logreg/logreg_predict.py $(DATA_TEST_FILE_PATH) --skip-input
 	@python3 src/test/evaluate.py --skip-input
 
+
 req:
 	@pip3 install -r requirements.txt
+
 
 clean:
 
