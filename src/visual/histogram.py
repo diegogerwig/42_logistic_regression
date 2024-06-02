@@ -20,8 +20,6 @@ houses = ['Gryffindor', 'Slytherin', 'Ravenclaw', 'Hufflepuff']
 colors = ['blue', 'orange', 'green', 'red']
 
 
-
-
 def histogram(filename):
     '''
     Generate histogram for the given dataset file.
