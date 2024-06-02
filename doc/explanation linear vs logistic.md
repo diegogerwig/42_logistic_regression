@@ -18,6 +18,7 @@ Model: Linear regression models the relationship between the dependent variable 
 **Prediction**: The model provides a continuous output (e.g., predicting house prices).
 
 ---
+---
 
 # Logistic Regression:
 
@@ -40,6 +41,7 @@ This is equivalent to minimizing the binary cross-entropy (log loss).
 **Prediction**: The model provides probabilities that a given instance belongs to a particular class. A threshold (e.g., 0.5) is typically applied to classify the output into binary classes 
 
 ---
+---
 
 # Key Differences:
 
@@ -61,3 +63,9 @@ This is equivalent to minimizing the binary cross-entropy (log loss).
 ## Loss Function:
 - Linear Regression: Mean squared error (MSE).
 - Logistic Regression: Binary cross-entropy (log loss).
+
+---
+---
+
+# Underfitting vs Overfitting:
+![](./under%20-%20over%20fitting.png)
